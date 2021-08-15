@@ -1,11 +1,31 @@
 <meta charset="utf-8">
 Hello World !!!! 변경 !!<br/>
 
-1.<br/>
-- git ignore 설정하기<br/>
-- vue.js 세팅하여 alert창 띄워보기<br/>
-- (중요) 데이터베이스 만들기 -> SQL 배우고 -> MyBatis 세팅<br/><br/>
+<button type="button" onclick="userJoin()">회원가입</button>
 
-2.<br/>
-- 컨트롤러 만들어서 매핑하기<br/>
-- 컨트롤러 이용하여 DB connection test (MySQL)
+<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+<script type="text/javascript">
+    function userJoin() {
+        var jsonData = {
+            'loginId': 'test5',
+            'password': 'test',
+            'userName': '테스터5',
+            'email': 'test5@test.com',
+            'phoneNumber': ''
+        };
+
+        $.ajax({
+            url: "/user/join",
+            data: JSON.stringify(jsonData),
+            method: "post",
+            contentType: "application/json; charset=UTF-8",
+            dataType: "json"
+        }).done(function() {
+            alert('회원가입 성공!');
+        }).fail(function() {
+            alert('회원가입 실패!');
+        });
+    }
+</script>
