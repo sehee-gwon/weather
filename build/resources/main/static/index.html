@@ -1,0 +1,94 @@
+<meta charset="utf-8">
+
+<link rel="stylesheet" href="/navigation.css" />
+Hello World !!!! 변경 !!<br/>
+
+
+
+
+
+<input type="checkbox" id="main-navigation-toggle" class="btn btn--close" title="Toggle main navigation" />
+<label for="main-navigation-toggle">
+    <span></span>
+</label>
+
+<nav id="main-navigation" class="nav-main">
+    <ul class="menu">
+        <li class="menu__item">
+            <a class="menu__link" href="#0">Home</a>
+        </li>
+        <li class="menu__item">
+            <a class="menu__link" href="#0">About</a>
+        </li>
+        <li class="menu__item">
+            <a class="menu__link" href="#0">Clients</a>
+            <ul class="submenu">
+                <li class="menu__item">
+                    <a class="menu__link" href="#0">Burger King</a>
+                </li>
+                <li class="menu__item">
+                    <a class="menu__link" href="#0">Southwest Airlines</a>
+                </li>
+                <li class="menu__item">
+                    <a class="menu__link" href="#0">Levi Strauss</a>
+                </li>
+            </ul>
+        </li>
+        <li class="menu__item">
+            <a class="menu__link" href="#0">Services</a>
+            <ul class="submenu">
+                <li class="menu__item">
+                    <a class="menu__link" href="#0">Print Design</a>
+                </li>
+                <li class="menu__item">
+                    <a class="menu__link" href="#0">Web Design</a>
+                </li>
+                <li class="menu__item">
+                    <a class="menu__link" href="#0">Mobile App Development</a>
+                </li>
+            </ul>
+        </li>
+        <li class="menu__item">
+            <a class="menu__link" href="#0">Contact</a>
+        </li>
+    </ul>
+</nav>
+
+
+
+
+
+
+
+
+
+
+
+<button type="button" onclick="userJoin()">회원가입</button>
+
+<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+<script type="text/javascript">
+    function userJoin() {
+        var jsonData = {
+            'loginId': 'test5',
+            'password': 'test',
+            'userName': '테스터5',
+            'email': 'test5@test.com',
+            'phoneNumber': ''
+        };
+
+        $.ajax({
+            url: "/user/join",
+            data: JSON.stringify(jsonData),
+            method: "post",
+            contentType: "application/json; charset=UTF-8",
+            dataType: "json"
+        }).done(function() {
+            alert('회원가입 성공!');
+        }).fail(function() {
+            alert('회원가입 실패!');
+        });
+    }
+</script>
