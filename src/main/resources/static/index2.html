@@ -1,0 +1,150 @@
+<meta charset="utf-8">
+
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/common.css">
+</head>
+<body>
+    <div id="rain">
+        <div class="front-row"></div>
+        <div class="back-row"></div>
+    </div>
+    <div id="snow"></div>
+
+    <script type="text/javascript">
+        function clear() {
+            // clear out everything
+            document.querySelector("#rain .front-row").innerHTML = '';
+            document.querySelector("#rain .back-row").innerHTML = '';
+
+            document.getElementById("snow").innerHTML = '';
+        }
+
+        function rain() {
+            var increment = 0;
+            var drops = "";
+            var backDrops = "";
+
+            while (increment < 100) {
+                // couple random numbers to use for various randomizations
+                // random number between 98 and 1
+                var randoHundo = (Math.floor(Math.random() * (98 - 1 + 1) + 1));
+
+                // random number between 5 and 2
+                var randoFiver = (Math.floor(Math.random() * (5 - 2 + 1) + 2));
+
+                // increment
+                increment += randoFiver;
+
+                // add in a new raindrop with various randomizations to certain CSS properties
+                drops += '<div class="drop" style="left: ' + increment + '%; bottom: ' + (randoFiver + randoFiver - 1 + 100) + '%; animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"><div class="stem" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div><div class="splat" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div></div>';
+                backDrops += '<div class="drop" style="right: ' + increment + '%; bottom: ' + (randoFiver + randoFiver - 1 + 100) + '%; animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"><div class="stem" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div><div class="splat" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div></div>';
+            }
+
+            document.querySelector("#rain .front-row").innerHTML = drops;
+            document.querySelector("#rain .back-row").innerHTML = backDrops;
+        }
+
+        function snow() {
+            var particleCount = 600;
+            var particleMax   = 2000;
+            var snow           = document.getElementById('snow');
+            var canvas        = document.createElement('canvas');
+            var ctx           = canvas.getContext('2d');
+            var width         = snow.clientWidth;
+            var height        = snow.clientHeight;
+            var i             = 0;
+            var active        = false;
+            var snowflakes    = [];
+            var snowflake;
+
+            canvas.style.position = 'absolute';
+            canvas.style.left = canvas.style.top = '0';
+
+            var Snowflake = function () {
+                this.x = 0;
+                this.y = 0;
+                this.vy = 0;
+                this.vx = 0;
+                this.r = 0;
+
+                this.reset();
+            };
+
+            Snowflake.prototype.reset = function() {
+                this.x = Math.random() * width;         // 가로축 시작지점
+                this.y = Math.random() * -height;       // 세로축 시작지점
+                this.vy = 1 + Math.random() * 3;        // 눈 내리는 속도
+                this.vx = 0.5 - Math.random();          // 눈 우측으로 휘날림의 정도
+                this.r = 1 + Math.random() * 6;         // 눈송이의 크기
+                this.o = 0.3 + Math.random() * 0.5;     // 눈송이의 투명도
+            };
+
+            function generateSnowFlakes() {
+                snowflakes = [];
+                for (i = 0; i < particleMax; i++) {
+                    snowflake = new Snowflake();
+                    snowflake.reset();
+                    snowflakes.push(snowflake);
+                }
+            }
+
+            generateSnowFlakes();
+
+            function update() {
+                ctx.clearRect(0, 0, width, height);
+
+                if (!active) {
+                    return;
+                }
+
+                for (i = 0; i < particleCount; i++) {
+                    snowflake = snowflakes[i];
+                    snowflake.y += snowflake.vy;
+                    snowflake.x += snowflake.vx;
+
+                    ctx.globalAlpha = snowflake.o;
+                    ctx.beginPath();
+                    ctx.arc(snowflake.x, snowflake.y, snowflake.r, 0, Math.PI * 2, false);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    if (snowflake.y > height) {
+                        snowflake.reset();
+                    }
+                }
+
+                requestAnimFrame(update);
+            }
+
+            function onResize() {
+                width = snow.clientWidth;
+                height = snow.clientHeight;
+                canvas.width = width;
+                canvas.height = height;
+                ctx.fillStyle = '#FFF';
+
+                var wasActive = active;
+                active = width > 600;
+
+                if (!wasActive && active) {
+                    requestAnimFrame(update);
+                }
+            }
+
+            // shim layer with setTimeout fallback
+            window.requestAnimFrame = (function() {
+                return  window.requestAnimationFrame       ||
+                    window.webkitRequestAnimationFrame ||
+                    window.mozRequestAnimationFrame    ||
+                    function( callback ){
+                        window.setTimeout(callback, 1000 / 60);
+                    };
+            })();
+
+            onResize();
+            window.addEventListener('resize', onResize, false);
+
+            snow.appendChild(canvas);
+        }
+    </script>
+</body>
