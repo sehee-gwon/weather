@@ -5,29 +5,10 @@
 </div>
 <body>
     <form action="">
-        <input type="button"
-               value="누르면 터진다"
-               onclick="alert('펑!!')"/>
-        <br><br>
-        성별
-        <input type="radio" name="gender" value="female" />여성
-        <input type="radio" name="gender" value="male" />남성
-        <br>
-        자기는 뭘까요?
-        <input type="radio" name="darling" value="병아리" />병아리
-        <input type="radio" name="darling" value="흰눈오목눈이" />흰눈오목눈이
-        <input type="radio" name="darling" value="고양이" />고양이
-        <input type="radio" name="darling" value="강아지" />강아지
-        <br>
-        <input type="submit" value="인정">
-        <br>
-    </form>
-    <form action="">
-        <br>
-        ID : <input id="userid" type="text"/><br>
-        비밀번호(최대10자리) : <input id="pwd" type="password" maxlength="10"/>
-        <br>
-        <input type="submit">
+        <input type="radio" id="Seoul" name="city" value="Seoul" /> <label for="Seoul">서울시</label>
+        <input type="radio" id="Incheon" name="city" value="Incheon" /> <label for="Seoul">인천시</label>
+        <input type="radio" id="Busan" name="city" value="Busan" /> <label for="Seoul">부산시</label>
+        <button type="submit">검색</button>
     </form>
 
 <!-- 개발버전, 도움되는 콘솔 경고를 포함. -->
