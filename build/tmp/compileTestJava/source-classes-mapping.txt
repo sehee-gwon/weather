@@ -1,4 +1,0 @@
-com/weather/user/UserControllerTest.java
- com.weather.user.UserControllerTest
-com/weather/api/OpenWeatherApiControllerTest.java
- com.weather.api.OpenWeatherApiControllerTest

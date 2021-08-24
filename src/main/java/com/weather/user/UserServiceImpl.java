@@ -1,8 +1,8 @@
 package com.weather.user;
 
+import com.weather.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.weather.user.domain.User;
 
 import java.util.List;
 
