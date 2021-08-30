@@ -2,6 +2,7 @@ package com.weather.api;
 
 import com.weather.api.domain.OpenWeatherApi;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,7 @@ public class OpenWeatherApiController {
     private static final String apiKey = "ef793455d9c2b630991a32d738d2fbb7";
 
     @GetMapping("/data")
-    public void data(String city) { // city 를 어떻게 받을까 ?
+    public ResponseEntity data(@RequestParam(name="city") String city) {
         StringBuilder urlBuilder = new StringBuilder(baseUrl);
 
         try {
@@ -30,10 +31,10 @@ public class OpenWeatherApiController {
             RestTemplate restTemplate = new RestTemplate();
             OpenWeatherApi response = restTemplate.getForObject(urlBuilder.toString(), OpenWeatherApi.class);
 
-            log.info("OpenWeatherApi Data : {}", city);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            // Exception e
-            log.info("OpenWeatherApi Error : {}", e.getMessage());
+            log.error("OpenWeatherApi Error : {}", e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

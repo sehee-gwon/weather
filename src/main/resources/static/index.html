@@ -1,31 +1,42 @@
 <meta charset="utf-8">
+<head>
+    <!-- axios 설치 -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
 
 <div id="app">
-    <p>{{ message }}</p>
 </div>
 <body>
-    <form action="">
+    <!--<form action="/api/open-weather/data" method="get">
         <input type="radio" id="Seoul" name="city" value="Seoul" /> <label for="Seoul">서울시</label>
-        <input type="radio" id="Incheon" name="city" value="Incheon" /> <label for="Seoul">인천시</label>
-        <input type="radio" id="Busan" name="city" value="Busan" /> <label for="Seoul">부산시</label>
+        <input type="radio" id="Incheon" name="city" value="Incheon" /> <label for="Incheon">인천시</label>
+        <input type="radio" id="Busan" name="city" value="Busan" /> <label for="Busan">부산시</label>
         <button type="submit">검색</button>
-    </form>
+    </form>-->
+
+
+    <button type="button" onclick="cityType('Seoul')">서울시</button>
+    <button type="button" onclick="cityType('Incheon')">인천시</button>
+    <button type="button" onclick="cityType('Busan')">부산시</button>
+
 
 <!-- 개발버전, 도움되는 콘솔 경고를 포함. -->
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
 <script type="text/javascript">
-    new Vue({
-        el: '#app',
-        data: {
-            message: 'Hello Vue.js!'
-        },
-        mounted() {
-            this.$nextTick(function () {
-                // 전체 화면내용이 렌더링된 후에 아래의 코드가 실행됩니다.
-
-            })
-        }
-    })
+    function cityType(city) {
+        axios.get('/api/open-weather/data', {
+            params: {
+               "city": city
+            }
+        })
+        .then(function(response) {  // http status 2xx
+            console.log(response.data);
+        })
+        .catch(function(error) {    // http status 2xx가 아닌 모든 status
+            console.log(error.response);
+        });
+    }
 </script>
+
 </body>
