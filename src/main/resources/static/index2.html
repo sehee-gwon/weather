@@ -1,150 +1,323 @@
 <meta charset="utf-8">
 
-<head>
-    <link rel="stylesheet" type="text/css" href="/css/common.css">
-</head>
-<body>
-    <div id="rain">
-        <div class="front-row"></div>
-        <div class="back-row"></div>
-    </div>
-    <div id="snow"></div>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="/css/weather.css">
+    </head>
+    <body>
+        <div id="weather">
+            <section class="container" v-if="result.weather != null && result.weather.length > 0">
+                <button type="type" @click="getWeather('Seoul')">서울시</button>
+                <button type="type" @click="getWeather('Incheon')">인천시</button>
+                <button type="type" @click="getWeather('Busan')">부산시</button>
+                <button type="type" @click="getWeather('Jeju')">제주시</button>
 
-    <script type="text/javascript">
-        function clear() {
-            // clear out everything
-            document.querySelector("#rain .front-row").innerHTML = '';
-            document.querySelector("#rain .back-row").innerHTML = '';
+                <br /><br />
 
-            document.getElementById("snow").innerHTML = '';
-        }
+                <button type="type" @click="testWeather('thunderstorm')">뇌우</button>
+                <button type="type" @click="testWeather('drizzle')">이슬비</button>
+                <button type="type" @click="testWeather('rain')">비</button>
+                <button type="type" @click="testWeather('snow')">눈</button>
+                <button type="type" @click="testWeather('clear')">맑음</button>
+                <button type="type" @click="testWeather('clouds')">구름</button>
+                <button type="type" @click="testWeather('tornado')">돌풍</button>
 
-        function rain() {
-            var increment = 0;
-            var drops = "";
-            var backDrops = "";
+                <div :id="result.weather[0].main" class="effect">
+                    <!-- 뇌우, 천둥번개와 비 -->
+                    <template v-if="result.weather[0].main === 'thunderstorm'">
+                        <div class="icon">
+                            <div class="cloud2"></div>
+                            <div class="thunder">
+                                <div class="bolt"></div>
+                                <div class="bolt"></div>
+                            </div>
+                        </div>
+                    </template>
+                    <!-- 이슬비 -->
+                    <template v-else-if="result.weather[0].main === 'drizzle'">
+                        <div class="icon">
+                            <div class="cloud2"></div>
+                            <div class="drizzle"></div>
+                        </div>
+                    </template>
+                    <!-- 비 -->
+                    <template v-else-if="result.weather[0].main === 'rain'">
+                        <div class="icon">
+                            <div class="cloud2"></div>
+                            <div class="rain"></div>
+                        </div>
+                        <div class="front-row"></div>
+                        <div class="back-row"></div>
+                    </template>
+                    <!-- 눈 -->
+                    <template v-else-if="result.weather[0].main === 'snow'">
+                        <div class="icon">
+                            <div class="cloud2"></div>
+                            <div class="snow">
+                                <div class="flake"></div>
+                                <div class="flake"></div>
+                                <div class="flake"></div>
+                                <div class="flake"></div>
+                            </div>
+                        </div>
+                        <canvas id="canvas" style="position: absolute; top: 0px; left: 0px; z-index:0;"></canvas>
+                    </template>
+                    <!-- 맑음, 해 -->
+                    <template v-else-if="result.weather[0].main === 'clear'">
+                        <div class="icon">
+                            <div class="rays">
+                                <div class="ray"></div>
+                                <div class="ray"></div>
+                                <div class="ray"></div>
+                                <div class="ray"></div>
+                            </div>
+                            <div class="sun"></div>
+                        </div>
+                    </template>
+                    <!-- 구름, 흐림 -->
+                    <template v-else-if="result.weather[0].main === 'clouds'">
+                        <div class="icon">
+                            <div class="cloudy">
+                                <div class="cloud2 small-cloud"></div>
+                                <div class="cloud2"></div>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-else-if="result.weather[0].main !== ''">
+                        <div class="icon">
+                            <div class="extreme text-center">
+                                <div class="harsh-wind"></div>
+                                <div class="harsh-wind"></div>
+                                <div class="harsh-wind"></div>
+                                <div class="harsh-wind"></div>
+                                <div class="harsh-wind"></div>
+                                <div class="harsh-wind"></div>
+                                <div class="harsh-wind"></div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </section>
+        </div>
 
-            while (increment < 100) {
-                // couple random numbers to use for various randomizations
-                // random number between 98 and 1
-                var randoHundo = (Math.floor(Math.random() * (98 - 1 + 1) + 1));
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> <!-- vue 개발버전, 도움되는 콘솔 경고를 포함. -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script> <!-- axios -->
 
-                // random number between 5 and 2
-                var randoFiver = (Math.floor(Math.random() * (5 - 2 + 1) + 2));
-
-                // increment
-                increment += randoFiver;
-
-                // add in a new raindrop with various randomizations to certain CSS properties
-                drops += '<div class="drop" style="left: ' + increment + '%; bottom: ' + (randoFiver + randoFiver - 1 + 100) + '%; animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"><div class="stem" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div><div class="splat" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div></div>';
-                backDrops += '<div class="drop" style="right: ' + increment + '%; bottom: ' + (randoFiver + randoFiver - 1 + 100) + '%; animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"><div class="stem" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div><div class="splat" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div></div>';
-            }
-
-            document.querySelector("#rain .front-row").innerHTML = drops;
-            document.querySelector("#rain .back-row").innerHTML = backDrops;
-        }
-
-        function snow() {
-            var particleCount = 600;
-            var particleMax   = 2000;
-            var snow           = document.getElementById('snow');
-            var canvas        = document.createElement('canvas');
-            var ctx           = canvas.getContext('2d');
-            var width         = snow.clientWidth;
-            var height        = snow.clientHeight;
-            var i             = 0;
-            var active        = false;
-            var snowflakes    = [];
-            var snowflake;
-
-            canvas.style.position = 'absolute';
-            canvas.style.left = canvas.style.top = '0';
-
-            var Snowflake = function () {
-                this.x = 0;
-                this.y = 0;
-                this.vy = 0;
-                this.vx = 0;
-                this.r = 0;
-
-                this.reset();
-            };
-
-            Snowflake.prototype.reset = function() {
-                this.x = Math.random() * width;         // 가로축 시작지점
-                this.y = Math.random() * -height;       // 세로축 시작지점
-                this.vy = 1 + Math.random() * 3;        // 눈 내리는 속도
-                this.vx = 0.5 - Math.random();          // 눈 우측으로 휘날림의 정도
-                this.r = 1 + Math.random() * 6;         // 눈송이의 크기
-                this.o = 0.3 + Math.random() * 0.5;     // 눈송이의 투명도
-            };
-
-            function generateSnowFlakes() {
-                snowflakes = [];
-                for (i = 0; i < particleMax; i++) {
-                    snowflake = new Snowflake();
-                    snowflake.reset();
-                    snowflakes.push(snowflake);
-                }
-            }
-
-            generateSnowFlakes();
-
-            function update() {
-                ctx.clearRect(0, 0, width, height);
-
-                if (!active) {
-                    return;
-                }
-
-                for (i = 0; i < particleCount; i++) {
-                    snowflake = snowflakes[i];
-                    snowflake.y += snowflake.vy;
-                    snowflake.x += snowflake.vx;
-
-                    ctx.globalAlpha = snowflake.o;
-                    ctx.beginPath();
-                    ctx.arc(snowflake.x, snowflake.y, snowflake.r, 0, Math.PI * 2, false);
-                    ctx.closePath();
-                    ctx.fill();
-
-                    if (snowflake.y > height) {
-                        snowflake.reset();
+        <script type="text/javascript">
+            var vm = new Vue({
+                el: "#weather",
+                data: {
+                    city: "",
+                    result: {
+                        coord: {},
+                        weather: [{
+                            /**
+                             * 기상 조건 ID (iD, main, description, icon)
+                             * 200~232, Thunderstorm, 11d (뇌우, 천둥번개와 비)
+                             * 300~321, Drizzle, 09d (이슬비)
+                             * 500~531, Rain, 10d (비)
+                             * 600~622, Snow, 13d (눈)
+                             * 701~781, Mist/Smoke/Haze/Dust/Fog/Sand/Ash/Squall/Tornado, 50d (안개, 먼지, 바람, 돌풍...)
+                             * 800, Clear, 01d/01n (맑음, 해)
+                             * 801~804, Clouds, 02~04d/02~04n (구름, 흐림)
+                             */
+                            id: 0,
+                            main: "",           // 날씨 매개 변수 그룹
+                            description: "",    // 날씨 설명
+                            icon: ""            // 날씨 아이콘
+                        }],
+                        base: "",
+                        main: {},
+                        wind: {},
+                        clouds: {},
+                        rain: {},
+                        snow: {},
+                        dt: 0,
+                        sys: {},
+                        timezone: 0,
+                        id: 0,
+                        name: "",
+                        cod: 0,
+                        visibility: 0
                     }
+                },
+                methods: {
+                    testWeather: function(main) {
+                        vm.clear();
+                        vm.result.weather[0].main = main;
+                        setTimeout(function() {
+                            vm.event(main);
+                        }, 500);
+                    },
+                    getWeather: function(city) {
+                        vm.city = city;
+                        vm.clear();
+
+                        axios.get('/api/open-weather/data', {
+                            params: {'city': vm.city}
+                        })
+                        .then(function(response) {
+                            vm.result = response.data;
+                            console.log(vm.result);
+
+                            if (vm.result != null && vm.result.weather != null && vm.result.weather.length > 0) {
+                                vm.result.weather[0].main = vm.result.weather[0].main.toLowerCase();
+
+                                if (vm.result.weather[0].id >= 700 && vm.result.weather[0].id < 800) {
+                                    vm.result.weather[0].main = "tornado";
+                                }
+
+                                setTimeout(function() {
+                                    vm.event(vm.result.weather[0].main);
+                                }, 500);
+                            }
+                        })
+                        .catch(function(error) {
+                            console.error(error.response);
+                        });
+                    },
+                    event: function(main) {
+                        if (main === "rain") {
+                            vm.rain();
+                        } else if (main === "snow") {
+                            vm.snow();
+                        }
+                    },
+                    clear: function() {
+                        // clear out everything
+                    },
+                    rain: function() {
+                        var increment = 0;
+                        var drops = "";
+                        var backDrops = "";
+
+                        while (increment < 100) {
+                            // couple random numbers to use for various randomizations
+                            // random number between 98 and 1
+                            var randoHundo = (Math.floor(Math.random() * (98 - 1 + 1) + 1));
+
+                            // random number between 5 and 2 (빗방울 높낮이 랜덤 격차)
+                            var randoFiver = (Math.floor(Math.random() * (5 - 2 + 1) + 2));
+
+                            // increment
+                            increment += randoFiver;
+
+                            // add in a new raindrop with various randomizations to certain CSS properties
+                            drops += '<div class="drop" style="left: ' + increment + '%; bottom: ' + (randoFiver + randoFiver - 1 + 100) + '%; animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"><div class="stem" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div><div class="splat" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div></div>';
+                            backDrops += '<div class="drop" style="right: ' + increment + '%; bottom: ' + (randoFiver + randoFiver - 1 + 100) + '%; animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"><div class="stem" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div><div class="splat" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div></div>';
+                        }
+
+                        document.querySelector("#rain .front-row").innerHTML = drops;
+                        document.querySelector("#rain .back-row").innerHTML = backDrops;
+                    },
+                    snow: function() {
+                        var particleCount = 600;
+                        var particleMax   = 2000;
+                        var snow           = document.getElementById('weather');
+                        var canvas        = document.getElementById('canvas');
+                        var ctx           = canvas.getContext('2d');
+                        var width         = snow.clientWidth;
+                        var height        = snow.clientHeight;
+                        var i             = 0;
+                        var active        = false;
+                        var snowflakes    = [];
+                        var snowflake;
+
+                        canvas.style.position = 'absolute';
+                        canvas.style.left = canvas.style.top = '0';
+
+                        var Snowflake = function () {
+                            this.x = 0;
+                            this.y = 0;
+                            this.vy = 0;
+                            this.vx = 0;
+                            this.r = 0;
+
+                            this.reset();
+                        };
+
+                        Snowflake.prototype.reset = function() {
+                            this.x = Math.random() * width;         // 가로축 시작지점
+                            this.y = Math.random() * -height;       // 세로축 시작지점
+                            this.vy = 1 + Math.random() * 3;        // 눈 내리는 속도
+                            this.vx = 0.5 - Math.random();          // 눈 우측으로 휘날림의 정도
+                            this.r = 1 + Math.random() * 6;         // 눈송이의 크기
+                            this.o = 0.3 + Math.random() * 0.5;     // 눈송이의 투명도
+                        };
+
+                        function generateSnowFlakes() {
+                            snowflakes = [];
+                            for (i = 0; i < particleMax; i++) {
+                                snowflake = new Snowflake();
+                                snowflake.reset();
+                                snowflakes.push(snowflake);
+                            }
+                        }
+
+                        generateSnowFlakes();
+
+                        function update() {
+                            ctx.clearRect(0, 0, width, height);
+
+                            if (!active) {
+                                return;
+                            }
+
+                            for (i = 0; i < particleCount; i++) {
+                                snowflake = snowflakes[i];
+                                snowflake.y += snowflake.vy;
+                                snowflake.x += snowflake.vx;
+
+                                ctx.globalAlpha = snowflake.o;
+                                ctx.beginPath();
+                                ctx.arc(snowflake.x, snowflake.y, snowflake.r, 0, Math.PI * 2, false);
+                                ctx.closePath();
+                                ctx.fill();
+
+                                if (snowflake.y > height) {
+                                    snowflake.reset();
+                                }
+                            }
+
+                            requestAnimFrame(update);
+                        }
+
+                        function onResize() {
+                            width = snow.clientWidth;
+                            height = snow.clientHeight;
+                            canvas.width = width;
+                            canvas.height = height;
+                            ctx.fillStyle = '#FFF';
+
+                            var wasActive = active;
+                            active = width > 600;
+
+                            if (!wasActive && active) {
+                                requestAnimFrame(update);
+                            }
+                        }
+
+                        // shim layer with setTimeout fallback
+                        window.requestAnimFrame = (function() {
+                            return  window.requestAnimationFrame       ||
+                                window.webkitRequestAnimationFrame ||
+                                window.mozRequestAnimationFrame    ||
+                                function( callback ){
+                                    window.setTimeout(callback, 1000 / 60);
+                                };
+                        })();
+
+                        onResize();
+                        window.addEventListener('resize', onResize, false);
+                    }
+                },
+                mounted() {
+                    this.$nextTick(function () {
+                        // 전체 화면내용이 렌더링된 후에 아래의 코드가 실행됩니다.
+
+                    })
                 }
-
-                requestAnimFrame(update);
-            }
-
-            function onResize() {
-                width = snow.clientWidth;
-                height = snow.clientHeight;
-                canvas.width = width;
-                canvas.height = height;
-                ctx.fillStyle = '#FFF';
-
-                var wasActive = active;
-                active = width > 600;
-
-                if (!wasActive && active) {
-                    requestAnimFrame(update);
-                }
-            }
-
-            // shim layer with setTimeout fallback
-            window.requestAnimFrame = (function() {
-                return  window.requestAnimationFrame       ||
-                    window.webkitRequestAnimationFrame ||
-                    window.mozRequestAnimationFrame    ||
-                    function( callback ){
-                        window.setTimeout(callback, 1000 / 60);
-                    };
-            })();
-
-            onResize();
-            window.addEventListener('resize', onResize, false);
-
-            snow.appendChild(canvas);
-        }
-    </script>
-</body>
+            })
+        </script>
+    </body>
+</html>
