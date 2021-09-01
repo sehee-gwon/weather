@@ -2,10 +2,10 @@
 <head>
     <!-- axios 설치 -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- 개발버전, 도움되는 콘솔 경고를 포함. -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 
-<div id="app">
-</div>
 <body>
     <!--<form action="/api/open-weather/data" method="get">
         <input type="radio" id="Seoul" name="city" value="Seoul" /> <label for="Seoul">서울시</label>
@@ -14,29 +14,47 @@
         <button type="submit">검색</button>
     </form>-->
 
+    <div id="weather">
+        <!--<ul>
+            <li v-for="city in cityType">
+                {{ city.title }}
+            </li>
+        </ul>-->
+        <button type="button" @click="getWeather('Seoul')">서울시</button>
+        <button type="button" @click="getWeather('Incheon')">인천시</button>
+        <button type="button" @click="getWeather('Busan')">부산시</button>
+    </div>
 
-    <button type="button" onclick="cityType('Seoul')">서울시</button>
-    <button type="button" onclick="cityType('Incheon')">인천시</button>
-    <button type="button" onclick="cityType('Busan')">부산시</button>
-
-
-<!-- 개발버전, 도움되는 콘솔 경고를 포함. -->
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-
-<script type="text/javascript">
-    function cityType(city) {
-        axios.get('/api/open-weather/data', {
-            params: {
-               "city": city
+    <script type="text/javascript">
+        var vm = new Vue({
+            el: "#weather",
+            data: {
+                cityType: []
+            },
+            methods: {
+                getWeather: function(city) {
+                    axios.get('/api/open-weather/data', {
+                        params: {
+                            "city": city
+                        }
+                    })
+                    .then(function (response) {  // http status 2xx
+                        console.log(response.data);
+                    })
+                    .catch(function (error) {    // http status 2xx가 아닌 모든 status
+                        console.log(error.response);
+                    })
+                },
+            },
+            mounted() {
+                axios.get('/api/open-weather/cityType', {})
+                .then(function (response) {
+                    console.log(response.data);
+                })
+                .catch(function (error) {
+                    console.log(error.response);
+                })
             }
         })
-        .then(function(response) {  // http status 2xx
-            console.log(response.data);
-        })
-        .catch(function(error) {    // http status 2xx가 아닌 모든 status
-            console.log(error.response);
-        });
-    }
-</script>
-
+    </script>
 </body>
