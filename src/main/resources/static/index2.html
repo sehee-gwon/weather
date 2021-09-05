@@ -114,6 +114,7 @@
                 data: {
                     city: "",
                     result: {
+                        cityType: [],
                         coord: {},
                         weather: [{
                             /**
@@ -430,6 +431,13 @@
                 mounted() {
                     this.$nextTick(function () {
                         // 전체 화면내용이 렌더링된 후에 아래의 코드가 실행됩니다.
+                        axios.get('/api/open-weather/cityType', {})
+                        .then(function (response) {
+                            vm.cityType = response.data;
+                        })
+                        .catch(function (error) {
+                            console.log(error.response);
+                        })
                     })
                 }
             })

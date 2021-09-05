@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -26,11 +23,16 @@ public class OpenWeatherApiController {
 
     @GetMapping("/cityType")
     public ResponseEntity CityType() {
-        Map<CityType, String> map = new HashMap<>();
+        List<Map<String, String>> list = new ArrayList<>();
         for (CityType cityType : CityType.values()) {
-           // map.put(cityType, cityType.);
+            Map<String, String> map = new LinkedHashMap<>();
+
+            map.put("code", cityType.getCode());
+            map.put("title", cityType.getTitle());
+
+            list.add(map);
         }
-        return ResponseEntity.ok(map);
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/data")
