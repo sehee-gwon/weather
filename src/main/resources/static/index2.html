@@ -8,7 +8,7 @@
         <div id="weather">
             <section class="container" v-if="result.weather != null && result.weather.length > 0">
                 <template v-if="cityType != null && cityType.length > 0">
-                    <button type="type" v-for="city in cityType" @click="getWeather(city.code)">{{city.title}}</button>
+                    <button type="type" v-for="city in cityType" @click="getWeather(city)">{{city.title}}</button>
                 </template>
 
                 <button type="type" @click="testWeather('thunderstorm')">뇌우</button>
@@ -25,8 +25,8 @@
                     <!--<h1> Weather Board </h1>-->
                     <div class="row">
                         <div class="sido">
-                            <h2>인천시</h2>
-                            <p>last updated: Fri Jul 07 2017 12:00:00</p>
+                            <h2>{{title}}</h2>
+                            <p>Current Time : {{date}} {{week}} {{time}}</p>
                         </div>
                     </div>
                     <div class="row">
@@ -119,9 +119,9 @@
                         </div>
                         <div class="col-xs-12 col-sm-3 col-md-3">
                             <h3>{{result.weather[0].description}}</h3>
-                            <h3><span id="tempNum">기온</span> &#8451;<span class="linediv"> | </span>&#8457;</h3>
-                            <h3>습도: %</h3>
-                            <h3>풍속: m/s</h3>
+                            <h3><span id="tempNum">기온</span> {{result.main.temp}}&#8451;<span class="linediv"> | </span>&#8457;</h3>
+                            <h3>습도: {{result.main.humidity}}%</h3>
+                            <h3>풍속: {{result.wind.speed}}m/s</h3>
                         </div>
                     </div>
                 </div>
@@ -135,7 +135,11 @@
             var vm = new Vue({
                 el: "#weather",
                 data: {
+                    date: "",
+                    week: "",
+                    time: "00:00:00",
                     cityType: [],
+                    title: "",
                     city: "",
                     result: {
                         coord: {},
@@ -188,7 +192,14 @@
                         });
                     },
                     getWeather: function(city) {
-                        vm.city = city;
+                        var date = new Date();
+                        var week = new Array("(SUN)", "(MON)", "(TUE)", "(WEN)", "(THU)", "(FRI)", "(SAT)");
+                        this.week = week[date.getDate()];
+                        this.date = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2);
+                        this.time = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+
+                        vm.city = city.code;
+                        vm.title = city.title;
                         vm.clear();
 
                         axios.get('/api/open-weather/data', {
