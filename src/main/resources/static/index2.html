@@ -11,14 +11,6 @@
                     <button type="type" v-for="city in cityType" @click="getWeather(city)">{{city.title}}</button>
                 </template>
 
-                <button type="type" @click="testWeather('thunderstorm')">뇌우</button>
-                <button type="type" @click="testWeather('drizzle')">이슬비</button>
-                <button type="type" @click="testWeather('rain')">비</button>
-                <button type="type" @click="testWeather('snow')">눈</button>
-                <button type="type" @click="testWeather('clear')">맑음</button>
-                <button type="type" @click="testWeather('clouds')">구름</button>
-                <button type="type" @click="testWeather('tornado')">돌풍</button>
-
                 <br /><br />
 
                 <div class="weather_frame">
@@ -82,9 +74,9 @@
                         </div>-->
                         <div class="info">
                             <h3>{{result.weather[0].description}}</h3>
-                            <h3><span id="tempNum">기온</span> {{result.main.temp}}&#8451;<span class="linediv"> | </span>&#8457;</h3>
-                            <h3>습도: {{result.main.humidity}}%</h3>
-                            <h3>풍속: {{result.wind.speed}}m/s</h3>
+                            <h3><span>기온 </span> {{result.main.temp}} &#8451;</h3>
+                            <h3>습도 {{result.main.humidity}}%</h3>
+                            <h3>풍속 {{result.wind.speed}}m/s</h3>
                         </div>
                     </div>
                 </div>
@@ -160,13 +152,6 @@
                     }
                 },
                 methods: {
-                    testWeather: function(main) {
-                        vm.clear();
-                        vm.result.weather[0].main = main;
-                        setTimeout(function() {
-                            vm.event(main);
-                        }, 500);
-                    },
                     getCityType: function() {
                         axios.get('/api/open-weather/cityType', {})
                         .then(function (response) {
