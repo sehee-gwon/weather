@@ -446,6 +446,15 @@
                     this.$nextTick(function () {
                         // 전체 화면내용이 렌더링된 후에 아래의 코드가 실행됩니다.
                         vm.getCityType();
+
+                        // 현재 위치 파악하기, geolocation을 지원하는지 확인 후 실행
+                        if (window.navigator.geolocation) {
+                            window.navigator.geolocation.getCurrentPosition(function(response) {
+                                console.log(response)
+                            }, function(error) {
+                                console.error(error.message);
+                            });
+                        }
                     })
                 }
             })
