@@ -15,9 +15,6 @@ body {
     background: var(--bg-color);
 }
 
-/**
-    날씨 이펙트
- */
 #weather {
     position: absolute;
     left: 0;
@@ -31,204 +28,31 @@ button {
 }
 
 .container {
+    position: relative;
     text-align: center;
 }
 
 .weather_frame {
-
+    color: #ffffff;
+    width: 80%;
+    margin: 10em auto auto auto;
 }
 
-/* thunderstorm :: 뇌우 */
-.effect#thunderstorm #thunderstorm-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 0;
+.weather_frame .row {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
 }
 
-/* rain :: 비 */
-/* drizzle :: 이슬비 */
-/* thunderstorm :: 뇌우 */
-.effect#thunderstorm .back-row,
-.effect#rain .back-row,
-.effect#drizzle .back-row {
-    z-index: 1;
-    opacity: 0.5;
+.weather_frame .row .info {
+    text-align: left;
+    margin-left: 4em;
 }
 
-.effect#thunderstorm .drop,
-.effect#rain .drop {
-    position: absolute;
-    width: 15px;
-    height: 120px;
-    pointer-events: none;
-    animation: drop 0.5s linear infinite;
-}
-
-.effect#drizzle .drop {
-    position: absolute;
-    width: 15px;
-    height: 10px;
-    pointer-events: none;
-    animation: drop 0.5s linear infinite;
-}
-
-@keyframes drop {
-    0% {
-        transform: translateY(0vh);
-    }
-    75% {
-        transform: translateY(100vh);
-    }
-    100% {
-        transform: translateY(95vh);
-    }
-}
-
-.effect#thunderstorm .stem,
-.effect#rain .stem {
-    width: 2px;
-    height: 100%;
-    margin-left: 7px;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25));
-    animation: stem 0.5s linear infinite;
-}
-
-.effect#drizzle .stem {
-    width: 2px;
-    height: 100%;
-    margin-left: 7px;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25));
-    animation: stem 0.5s linear infinite;
-}
-
-@keyframes stem {
-    0% {
-        opacity: 1;
-    }
-    65% {
-        opacity: 1;
-    }
-    75% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 0;
-    }
-}
-
-.effect#thunderstorm .splat,
-.effect#rain .splat {
-    width: 18px;
-    height: 10px;
-    border-top: 2px dotted rgba(255, 255, 255, 0.5);
-    border-radius: 50%;
-    opacity: 1;
-    transform: scale(0);
-    animation: splat 0.5s linear infinite;
-}
-
-.effect#drizzle .splat {
-    width: 10px;
-    height: 10px;
-    border-top: 2px dotted rgba(255, 255, 255, 0.5);
-    border-radius: 50%;
-    opacity: 1;
-    transform: scale(0);
-    animation: splat 0.5s linear infinite;
-}
-
-@keyframes splat {
-    0% {
-        opacity: 1;
-        transform: scale(0);
-    }
-    80% {
-        opacity: 1;
-        transform: scale(0);
-    }
-    90% {
-        opacity: 0.5;
-        transform: scale(1);
-    }
-    100% {
-        opacity: 0;
-        transform: scale(1.5);
-    }
-}
-
-/* snow :: 눈 */
-.effect#snow #snow-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 0;
-}
-
-/* clouds :: 구름 */
-.effect#clouds .fog {
-    opacity: 0;
-    position: fixed;
-    width: 20%;
-}
-
-.effect#clouds .clouds {
-    background: var(--bg-color) opacity(0.4);
-    pointer-events: none;
-    position: absolute;
-    overflow: hidden;
-    top:      0;
-    left:     0;
-    right:    0;
-    height:   100%;
-}
-
-.effect#clouds .clouds-1,
-.effect#clouds .clouds-2,
-.effect#clouds .clouds-3 {
-    background-repeat: repeat-x;
-    position: absolute;
-    top:      0;
-    right:    0;
-    left:     0;
-    height:   500px;
-}
-
-.effect#clouds .clouds-1 {
-    background-image: url("/img/clouds_1.png");
-    animation: clouds-loop-1 20s infinite linear;
-}
-
-@keyframes clouds-loop-1 {
-    to { background-position: 1000px 0; }
-}
-
-.effect#clouds .clouds-2 {
-    background-image: url("/img/clouds_2.png");
-    animation: clouds-loop-2 15s infinite linear;
-}
-
-@keyframes clouds-loop-2 {
-    to { background-position: 1000px 0; }
-}
-
-.effect#clouds .clouds-3 {
-    background-image: url("/img/clouds_3.png");
-    animation: clouds-loop-3 17s infinite linear;
-}
-
-@keyframes clouds-loop-3 {
-    to { background-position: 1579px 0; }
-}
-
-/**
-    날씨 아이콘
- */
+/* 날씨 아이콘 */
 .icon {
-    position: relative;
-    display: inline-block;
-    background-color: var(--bg-color);
-    margin: 5%;
+    margin: 0.5em 0.5em 0 0;
     width: 4em;
     height: 4em;
     font-size: 2.5em;
@@ -618,4 +442,188 @@ button {
         transform: scale(0.5) translate(-6em, -3em);
         opacity: 0;
     }
+}
+
+/* 날씨 이펙트 */
+/* thunderstorm :: 뇌우 */
+.effect#thunderstorm #thunderstorm-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+/* rain :: 비 */
+/* drizzle :: 이슬비 */
+/* thunderstorm :: 뇌우 */
+.effect#thunderstorm .back-row,
+.effect#rain .back-row,
+.effect#drizzle .back-row {
+    z-index: 1;
+    opacity: 0.5;
+}
+
+.effect#thunderstorm .drop,
+.effect#rain .drop {
+    position: absolute;
+    width: 15px;
+    height: 120px;
+    pointer-events: none;
+    animation: drop 0.5s linear infinite;
+}
+
+.effect#drizzle .drop {
+    position: absolute;
+    width: 15px;
+    height: 10px;
+    pointer-events: none;
+    animation: drop 0.5s linear infinite;
+}
+
+@keyframes drop {
+    0% {
+        transform: translateY(0vh);
+    }
+    75% {
+        transform: translateY(100vh);
+    }
+    100% {
+        transform: translateY(95vh);
+    }
+}
+
+.effect#thunderstorm .stem,
+.effect#rain .stem {
+    width: 2px;
+    height: 100%;
+    margin-left: 7px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25));
+    animation: stem 0.5s linear infinite;
+}
+
+.effect#drizzle .stem {
+    width: 2px;
+    height: 100%;
+    margin-left: 7px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25));
+    animation: stem 0.5s linear infinite;
+}
+
+@keyframes stem {
+    0% {
+        opacity: 1;
+    }
+    65% {
+        opacity: 1;
+    }
+    75% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.effect#thunderstorm .splat,
+.effect#rain .splat {
+    width: 18px;
+    height: 10px;
+    border-top: 2px dotted rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    opacity: 1;
+    transform: scale(0);
+    animation: splat 0.5s linear infinite;
+}
+
+.effect#drizzle .splat {
+    width: 10px;
+    height: 10px;
+    border-top: 2px dotted rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    opacity: 1;
+    transform: scale(0);
+    animation: splat 0.5s linear infinite;
+}
+
+@keyframes splat {
+    0% {
+        opacity: 1;
+        transform: scale(0);
+    }
+    80% {
+        opacity: 1;
+        transform: scale(0);
+    }
+    90% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.5);
+    }
+}
+
+/* snow :: 눈 */
+.effect#snow #snow-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+/* clouds :: 구름 */
+.effect#clouds .fog {
+    opacity: 0;
+    position: fixed;
+    width: 20%;
+}
+
+.effect#clouds .clouds {
+    background: var(--bg-color) opacity(0.4);
+    pointer-events: none;
+    position: absolute;
+    overflow: hidden;
+    top:      0;
+    left:     0;
+    right:    0;
+    height:   100%;
+}
+
+.effect#clouds .clouds-1,
+.effect#clouds .clouds-2,
+.effect#clouds .clouds-3 {
+    background-repeat: repeat-x;
+    position: absolute;
+    top:      0;
+    right:    0;
+    left:     0;
+    height:   500px;
+}
+
+.effect#clouds .clouds-1 {
+    background-image: url("/img/clouds_1.png");
+    animation: clouds-loop-1 20s infinite linear;
+}
+
+@keyframes clouds-loop-1 {
+    to { background-position: 1000px 0; }
+}
+
+.effect#clouds .clouds-2 {
+    background-image: url("/img/clouds_2.png");
+    animation: clouds-loop-2 15s infinite linear;
+}
+
+@keyframes clouds-loop-2 {
+    to { background-position: 1000px 0; }
+}
+
+.effect#clouds .clouds-3 {
+    background-image: url("/img/clouds_3.png");
+    animation: clouds-loop-3 17s infinite linear;
+}
+
+@keyframes clouds-loop-3 {
+    to { background-position: 1579px 0; }
 }

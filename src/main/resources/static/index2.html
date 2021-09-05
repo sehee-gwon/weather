@@ -30,100 +30,85 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-12 col-sm-3 col-sm-offset-2 col-md-3 col-md-offset-3">
-                            <div :id="result.weather[0].main" class="effect">
-                                <!-- 뇌우, 천둥번개와 비 -->
-                                <template v-if="result.weather[0].main === 'thunderstorm'">
-                                    <div class="icon">
-                                        <div class="cloud2"></div>
-                                        <div class="thunder">
-                                            <div class="bolt"></div>
-                                            <div class="bolt"></div>
-                                        </div>
-                                    </div>
-                                    <canvas id="thunderstorm-canvas"></canvas>
-                                    <div class="rainy front-row"></div>
-                                    <div class="rainy back-row"></div>
-                                </template>
-                                <!-- 이슬비 -->
-                                <template v-else-if="result.weather[0].main === 'drizzle'">
-                                    <div class="icon">
-                                        <div class="cloud2"></div>
-                                        <div class="drizzle"></div>
-                                    </div>
-                                    <div class="rainy front-row"></div>
-                                    <div class="rainy back-row"></div>
-                                </template>
-                                <!-- 비 -->
-                                <template v-else-if="result.weather[0].main === 'rain'">
-                                    <div class="icon">
-                                        <div class="cloud2"></div>
-                                        <div class="rain"></div>
-                                    </div>
-                                    <div class="rainy front-row"></div>
-                                    <div class="rainy back-row"></div>
-                                </template>
-                                <!-- 눈 -->
-                                <template v-else-if="result.weather[0].main === 'snow'">
-                                    <div class="icon">
-                                        <div class="cloud2"></div>
-                                        <div class="snow">
-                                            <div class="flake"></div>
-                                            <div class="flake"></div>
-                                            <div class="flake"></div>
-                                            <div class="flake"></div>
-                                        </div>
-                                    </div>
-                                    <canvas id="snow-canvas"></canvas>
-                                </template>
-                                <!-- 맑음, 해 -->
-                                <template v-else-if="result.weather[0].main === 'clear'">
-                                    <div class="icon">
-                                        <div class="rays">
-                                            <div class="ray"></div>
-                                            <div class="ray"></div>
-                                            <div class="ray"></div>
-                                            <div class="ray"></div>
-                                        </div>
-                                        <div class="sun"></div>
-                                    </div>
-                                </template>
-                                <!-- 구름, 흐림 -->
-                                <template v-else-if="result.weather[0].main === 'clouds'">
-                                    <div class="icon">
-                                        <div class="cloudy">
-                                            <div class="cloud2 small-cloud"></div>
-                                            <div class="cloud2"></div>
-                                        </div>
-                                    </div>
-                                    <div class="clouds">
-                                        <div class="clouds-1"></div>
-                                        <div class="clouds-2"></div>
-                                        <div class="clouds-3"></div>
-                                    </div>
-                                </template>
-                                <template v-else-if="result.weather[0].main !== ''">
-                                    <div class="icon">
-                                        <div class="extreme text-center">
-                                            <div class="harsh-wind"></div>
-                                            <div class="harsh-wind"></div>
-                                            <div class="harsh-wind"></div>
-                                            <div class="harsh-wind"></div>
-                                            <div class="harsh-wind"></div>
-                                            <div class="harsh-wind"></div>
-                                            <div class="harsh-wind"></div>
-                                        </div>
-                                    </div>
-                                </template>
+                        <div class="icon" v-if="result.weather[0].main === 'thunderstorm'"> <!-- 뇌우, 천둥번개와 비 -->
+                            <div class="cloud2"></div>
+                            <div class="thunder">
+                                <div class="bolt"></div>
+                                <div class="bolt"></div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-sm-3 col-md-3">
+                        <div class="icon" v-else-if="result.weather[0].main === 'drizzle'"> <!-- 이슬비 -->
+                            <div class="cloud2"></div>
+                            <div class="drizzle"></div>
+                        </div>
+                        <div class="icon" v-else-if="result.weather[0].main === 'rain'"> <!-- 비 -->
+                            <div class="cloud2"></div>
+                            <div class="rain"></div>
+                        </div>
+                        <div class="icon" v-else-if="result.weather[0].main === 'snow'"> <!-- 눈 -->
+                            <div class="cloud2"></div>
+                            <div class="snow">
+                                <div class="flake"></div>
+                                <div class="flake"></div>
+                                <div class="flake"></div>
+                                <div class="flake"></div>
+                            </div>
+                        </div>
+                        <div class="icon" v-else-if="result.weather[0].main === 'clear'"> <!-- 맑음, 해 -->
+                            <div class="rays">
+                                <div class="ray"></div>
+                                <div class="ray"></div>
+                                <div class="ray"></div>
+                                <div class="ray"></div>
+                            </div>
+                            <div class="sun"></div>
+                        </div>
+                        <div class="icon" v-else-if="result.weather[0].main === 'clouds'"> <!-- 구름, 흐림 -->
+                            <div class="cloudy">
+                                <div class="cloud2 small-cloud"></div>
+                                <div class="cloud2"></div>
+                            </div>
+                        </div>
+                        <!--<div class="icon">
+                            <div class="extreme text-center">
+                                <div class="harsh-wind"></div>
+                                <div class="harsh-wind"></div>
+                                <div class="harsh-wind"></div>
+                                <div class="harsh-wind"></div>
+                                <div class="harsh-wind"></div>
+                                <div class="harsh-wind"></div>
+                                <div class="harsh-wind"></div>
+                            </div>
+                        </div>-->
+                        <div class="info">
                             <h3>{{result.weather[0].description}}</h3>
                             <h3><span id="tempNum">기온</span> {{result.main.temp}}&#8451;<span class="linediv"> | </span>&#8457;</h3>
                             <h3>습도: {{result.main.humidity}}%</h3>
                             <h3>풍속: {{result.wind.speed}}m/s</h3>
                         </div>
                     </div>
+                </div>
+
+                <div :id="result.weather[0].main" class="effect">
+                    <template v-if="result.weather[0].main === 'thunderstorm'"> <!-- 뇌우, 천둥번개와 비 -->
+                        <canvas id="thunderstorm-canvas"></canvas>
+                        <div class="rainy front-row"></div>
+                        <div class="rainy back-row"></div>
+                    </template>
+                    <template v-else-if="result.weather[0].main === 'drizzle' || result.weather[0].main === 'rain'"> <!-- 이슬비, 비 -->
+                        <div class="rainy front-row"></div>
+                        <div class="rainy back-row"></div>
+                    </template>
+                    <template v-else-if="result.weather[0].main === 'snow'"> <!-- 눈 -->
+                        <canvas id="snow-canvas"></canvas>
+                    </template>
+                    <template v-else-if="result.weather[0].main === 'clouds'"> <!-- 구름, 흐림 -->
+                        <div class="clouds">
+                            <div class="clouds-1"></div>
+                            <div class="clouds-2"></div>
+                            <div class="clouds-3"></div>
+                        </div>
+                    </template>
                 </div>
             </section>
         </div>
