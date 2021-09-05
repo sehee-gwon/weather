@@ -8,7 +8,7 @@
         <div id="weather">
             <section class="container" v-if="result.weather != null && result.weather.length > 0">
                 <template v-if="cityType != null && cityType.length > 0">
-                    <button type="type" v-for="city in cityType" @click="getWeather(city)">{{city.title}}</button>
+                    <button type="type" v-for="cityInfo in cityType" @click="getWeather(cityInfo)">{{cityInfo.title}}</button>
                 </template>
 
                 <br /><br />
@@ -17,7 +17,7 @@
                     <!--<h1> Weather Board </h1>-->
                     <div class="row">
                         <div class="sido">
-                            <h2>{{title}}</h2>
+                            <h2>{{city.title}}</h2>
                             <p>Current Time : {{date}} {{week}} {{time}}</p>
                         </div>
                     </div>
@@ -117,7 +117,12 @@
                     time: "00:00:00",
                     cityType: [],
                     title: "",
-                    city: "",
+                    city: {
+                        code: "",
+                        title: "",
+                        lat: 0,
+                        lon: 0
+                    },
                     result: {
                         coord: {},
                         weather: [{
@@ -161,22 +166,31 @@
                             console.error(error.response);
                         });
                     },
-                    getWeather: function(city) {
+                    getWeather: function(cityInfo) {
                         var date = new Date();
                         var week = new Array("(SUN)", "(MON)", "(TUE)", "(WED)", "(THU)", "(FRI)", "(SAT)");
                         this.week = week[date.getDate()];
                         this.date = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2);
                         this.time = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 
-                        vm.city = city.code;
-                        vm.title = city.title;
+                        vm.city = cityInfo;
                         vm.clear();
 
                         axios.get('/api/open-weather/data', {
-                            params: {'city': vm.city}
+                            params: {
+                                code: vm.city.code,
+                                lat: vm.city.lat,
+                                lon: vm.city.lon
+                            }
                         })
                         .then(function(response) {
                             vm.result = response.data;
+                            vm.cityType.forEach(city => {
+                                if (city.code === vm.result.name) {
+                                    vm.city.title = city.title;
+                                    return false;
+                                }
+                            });
 
                             if (vm.result != null && vm.result.weather != null && vm.result.weather.length > 0) {
                                 vm.result.weather[0].main = vm.result.weather[0].main.toLowerCase();
@@ -450,10 +464,15 @@
                         // 현재 위치 파악하기, geolocation을 지원하는지 확인 후 실행
                         if (window.navigator.geolocation) {
                             window.navigator.geolocation.getCurrentPosition(function(response) {
-                                console.log(response)
-                            }, function(error) {
+                                var cityInfo = {
+                                    lat: response.coords.latitude, // 위도
+                                    lon: response.coords.longitude // 경도
+                                }
+                                vm.getWeather(cityInfo);
+                            },
+                            function(error) {
                                 console.error(error.message);
-                            });
+                            })
                         }
                     })
                 }

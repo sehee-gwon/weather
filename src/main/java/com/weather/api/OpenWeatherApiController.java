@@ -1,17 +1,23 @@
 package com.weather.api;
 
+import com.weather.api.domain.City;
 import com.weather.api.domain.OpenWeatherApi;
 import com.weather.enumeration.CityType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -36,11 +42,17 @@ public class OpenWeatherApiController {
     }
 
     @GetMapping("/data")
-    public ResponseEntity data(@RequestParam(name="city") String city) {
+    public ResponseEntity data(City city) {
         StringBuilder urlBuilder = new StringBuilder(baseUrl);
 
         try {
-            urlBuilder.append("?" + URLEncoder.encode("q", "UTF-8") + "=" + city);
+            if (!StringUtils.isEmpty(city.getCode())) {
+                urlBuilder.append("?" + URLEncoder.encode("q", "UTF-8") + "=" + city.getCode());
+            } else {
+                urlBuilder.append("?" + URLEncoder.encode("lat", "UTF-8") + "=" + city.getLat());
+                urlBuilder.append("&" + URLEncoder.encode("lon", "UTF-8") + "=" + city.getLon());
+            }
+
             urlBuilder.append("&" + URLEncoder.encode("appid", "UTF-8") + "=" + apiKey);
             urlBuilder.append("&" + URLEncoder.encode("lang", "UTF-8") + "=kr");
             urlBuilder.append("&" + URLEncoder.encode("units", "UTF-8") + "=metric");
