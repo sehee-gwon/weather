@@ -193,7 +193,7 @@
                     },
                     getWeather: function(city) {
                         var date = new Date();
-                        var week = new Array("(SUN)", "(MON)", "(TUE)", "(WEN)", "(THU)", "(FRI)", "(SAT)");
+                        var week = new Array("(SUN)", "(MON)", "(TUE)", "(WED)", "(THU)", "(FRI)", "(SAT)");
                         this.week = week[date.getDate()];
                         this.date = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2);
                         this.time = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
