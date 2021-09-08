@@ -14,6 +14,26 @@ import java.util.List;
 @Getter
 @Setter
 public class OpenWeatherApi {
+    @JsonProperty("lat")
+    private double lat;          // 위치의 지리적 좌표(위도)
+
+    @JsonProperty("lon")
+    private double lon;          // 위치의 지리적 좌표(경도)
+
+    @JsonProperty("timezone")
+    private String timezone;    // 요청된 위치의 표준 시간대 이름
+
+    @JsonProperty("timezone-offset")
+    private int timezoneOffset; // UTC에서 초 단위로 이동
+
+    @JsonProperty("current")
+    private Current current;    // 현재 날씨 데이터 API 응답
+
+    @JsonProperty("daily")
+    private List<Daily> daily;        // 일일 일기 예보 일기 데이터 API 응답
+
+
+/*
     @JsonProperty("coord")
     private Coord coord;            // 도시의 경도, 위도 정보
 
@@ -58,5 +78,7 @@ public class OpenWeatherApi {
 
     @JsonProperty("visibility")
     private int visibility;         // 가시성
+*/
+
 }
 

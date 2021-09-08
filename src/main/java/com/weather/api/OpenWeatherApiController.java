@@ -22,17 +22,20 @@ import java.util.Map;
 @RequestMapping("/api/open-weather")
 public class OpenWeatherApiController {
 
-    private static final String baseUrl = "http://api.openweathermap.org/data/2.5/weather";
+    private static final String baseUrl = "http://api.openweathermap.org/data/2.5/onecall";
     private static final String apiKey = "ef793455d9c2b630991a32d738d2fbb7";
 
     @GetMapping("/cityType")
     public ResponseEntity CityType() {
-        List<Map<String, String>> list = new ArrayList<>();
+        List<Map<String, Object>> list = new ArrayList<>();
         for (CityType cityType : CityType.values()) {
-            Map<String, String> map = new LinkedHashMap<>();
+            Map<String, Object> map = new LinkedHashMap<>();
 
             map.put("code", cityType.getCode());
             map.put("title", cityType.getTitle());
+
+            map.put("lat", cityType.getlat());
+            map.put("lon", cityType.getlon());
 
             list.add(map);
         }
@@ -44,13 +47,14 @@ public class OpenWeatherApiController {
         StringBuilder urlBuilder = new StringBuilder(baseUrl);
 
         try {
-            if (!StringUtils.isEmpty(city.getCode())) {
+            /*if (!StringUtils.isEmpty(city.getCode())) {
                 urlBuilder.append("?" + URLEncoder.encode("q", "UTF-8") + "=" + city.getCode());
-            } else {
-                urlBuilder.append("?" + URLEncoder.encode("lat", "UTF-8") + "=" + city.getLat());
-                urlBuilder.append("&" + URLEncoder.encode("lon", "UTF-8") + "=" + city.getLon());
-            }
+            }*/
+            urlBuilder.append("?" + URLEncoder.encode("lat", "UTF-8") + "=" + city.getLat());
+            urlBuilder.append("&" + URLEncoder.encode("lon", "UTF-8") + "=" + city.getLon());
 
+
+            urlBuilder.append("&" + URLEncoder.encode("exclude", "UTF-8") + "=minutely,hourly,alerts");
             urlBuilder.append("&" + URLEncoder.encode("appid", "UTF-8") + "=" + apiKey);
             urlBuilder.append("&" + URLEncoder.encode("lang", "UTF-8") + "=kr");
             urlBuilder.append("&" + URLEncoder.encode("units", "UTF-8") + "=metric");
