@@ -50,8 +50,21 @@ button {
     margin-left: 4em;
 }
 
+.table td, th, tr{
+    border: 1px solid;
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+
 /* 날씨 아이콘 */
 .icon {
+    margin: 0.5em 0.5em 0 0;
+    width: 4em;
+    height: 4em;
+    font-size: 2.5em;
+}
+
+.daily_icon {
     margin: 0.5em 0.5em 0 0;
     width: 4em;
     height: 4em;

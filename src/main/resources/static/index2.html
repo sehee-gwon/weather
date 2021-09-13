@@ -79,6 +79,73 @@
                             <h3>풍속 {{result.current.wind_speed}}m/s</h3>
                         </div>
                     </div>
+
+                    <br /><br />
+
+                    <div class="row">
+                        <table class="table">
+                            <th>내일</th>
+                            <th>모레</th>
+                            <th>글피</th>
+                            <th>4일뒤</th>
+                            <th>5일뒤</th>
+                            <tr>
+                                <td class="icon">
+                                    <div v-if="result.daily[1].weather[0].main === 'Thunderstorm'"> <!-- 뇌우, 천둥번개와 비 -->
+                                        <div class="cloud2"></div>
+                                        <div class="thunder">
+                                            <div class="bolt"></div>
+                                            <div class="bolt"></div>
+                                        </div>
+                                    </div>
+                                    <div v-else-if="result.daily[1].weather[0].main === 'Drizzle'"> <!-- 이슬비 -->
+                                        <div class="cloud2"></div>
+                                        <div class="drizzle"></div>
+                                    </div>
+                                    <div v-else-if="result.daily[1].weather[0].main === 'Rain'"> <!-- 비 -->
+                                        <div class="cloud2"></div>
+                                        <div class="rain"></div>
+                                    </div>
+                                    <div v-else-if="result.daily[1].weather[0].main === 'Snow'"> <!-- 눈 -->
+                                        <div class="cloud2"></div>
+                                        <div class="snow">
+                                            <div class="flake"></div>
+                                            <div class="flake"></div>
+                                            <div class="flake"></div>
+                                            <div class="flake"></div>
+                                        </div>
+                                    </div>
+                                    <div v-else-if="result.daily[1].weather[0].main === 'Clear'"> <!-- 맑음, 해 -->
+                                        <div class="rays">
+                                            <div class="ray"></div>
+                                            <div class="ray"></div>
+                                            <div class="ray"></div>
+                                            <div class="ray"></div>
+                                        </div>
+                                        <div class="sun"></div>
+                                    </div>
+                                    <div v-else-if="result.daily[1].weather[0].main === 'Clouds'"> <!-- 구름, 흐림 -->
+                                        <div class="cloudy">
+                                            <div class="cloud2 small-cloud"></div>
+                                            <div class="cloud2"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <h2>날씨아이콘</h2>
+                                </td>
+                                <td>
+                                    <h2>날씨아이콘</h2>
+                                </td>
+                                <td>
+                                    <h2>날씨아이콘</h2>
+                                </td>
+                                <td>
+                                    <h2>날씨아이콘</h2>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
 
                 <template v-if="result.current.weather != null">
