@@ -7,10 +7,10 @@ public class Temp {
     private double day;      // 낮 기온.
 
     @JsonProperty("min")
-    private double min;      // 최소 일일 온도.
+    private int min;      // 최소 일일 온도.
 
     @JsonProperty("max")
-    private double max;      // 최대 일일 온도.
+    private int max;      // 최대 일일 온도.
 
     @JsonProperty("night")
     private double night;    // 밤 온도.
