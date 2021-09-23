@@ -24,17 +24,9 @@
 <body class="landing">
 
 <!-- Header -->
-<header id="header">
-    <h1><a href="/index.html">Transit</a></h1>
-    <nav id="nav">
-        <ul>
-            <li><a href="/index.html">Home</a></li>
-            <li><a href="/generic.html">Generic</a></li>
-            <li><a href="/elements.html">Elements</a></li>
-            <li><a href="#" class="button special">Sign Up</a></li>
-        </ul>
-    </nav>
-</header>
+<div id="weather">
+    <layout-header></layout-header>
+</div>
 
 <!-- Banner -->
 <section id="banner">
@@ -227,5 +219,16 @@
     </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> <!-- vue 개발버전, 도움되는 콘솔 경고를 포함. -->
+<script src="https://unpkg.com/http-vue-loader"></script>
+
+    <script type="text/javascript">
+        var vm = new Vue({
+            el: '#weather',
+            components: {
+                'layout-header': httpVueLoader('/include/header.vue'),
+            }
+        })
+    </script>
 </body>
 </html>
