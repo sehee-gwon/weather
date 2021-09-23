@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <header id="header">
     <h1><a href="/index.html">Transit</a></h1>
     <nav id="nav">
       <ul>
@@ -9,5 +9,5 @@
         <li><a href="#" class="button special">Sign Up</a></li>
       </ul>
     </nav>
-  </div>
+  </header>
 </template>
