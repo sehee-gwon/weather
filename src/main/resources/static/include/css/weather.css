@@ -621,7 +621,7 @@ button {
 }
 
 .effect#clouds .clouds-1 {
-    background-image: url("/img/clouds_1.png");
+    background-image: url("/include/img/clouds_1.png");
     animation: clouds-loop-1 20s infinite linear;
 }
 
@@ -630,7 +630,7 @@ button {
 }
 
 .effect#clouds .clouds-2 {
-    background-image: url("/img/clouds_2.png");
+    background-image: url("/include/img/clouds_2.png");
     animation: clouds-loop-2 15s infinite linear;
 }
 
@@ -639,7 +639,7 @@ button {
 }
 
 .effect#clouds .clouds-3 {
-    background-image: url("/img/clouds_3.png");
+    background-image: url("/include/img/clouds_3.png");
     animation: clouds-loop-3 17s infinite linear;
 }
 

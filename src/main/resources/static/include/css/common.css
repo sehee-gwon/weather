@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import url('/css/font-awesome.min.css');
+@import url('/include/css/font-awesome.min.css');
 @import url('http://fonts.googleapis.com/css?family=Raleway:700,400');
 
 /*
@@ -8,8 +8,15 @@
 	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
 */
 
-/* Basic */
+/* v-cloak */
+[v-cloak]::before {
+    display: none;
+}
+[v-cloak] > * {
+    display: none;
+}
 
+/* Basic */
 body {
     background: #fff;
 }
@@ -1031,7 +1038,7 @@ body.landing #header nav a {
 /* Banner */
 
 #banner {
-    background-image: url('/img/dark_tint.png'), url('/img/bokeh_car_lights_bg.jpg');
+    background-image: url('/include/img/dark_tint.png'), url('/include/img/bokeh_car_lights_bg.jpg');
     background-position: center center;
     background-size: cover;
     color: #ffffff;

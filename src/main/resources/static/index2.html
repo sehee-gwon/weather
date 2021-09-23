@@ -1,8 +1,9 @@
-<meta charset="utf-8">
+<meta charset="utf-8" xmlns="http://www.w3.org/1999/html">
 
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="/css/weather.css">
+    <link rel="stylesheet" type="text/css" href="/include/css/weather.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
 </head>
 <body>
 <div id="weather">
@@ -80,73 +81,63 @@
                 </div>
             </div>
 
-            <br /><br />
+            <br/><br/>
 
-            <div class="row">
+            <div class="row" v-if="result.daily.length != 0 ">
                 <table class="table">
                     <thead>
-                        <th>내일</th>
-                        <th>모레</th>
-                        <th>글피</th>
-                        <th>4일뒤</th>
-                        <th>5일뒤</th>
+                    <th v-for="(data, i) in result.daily" v-if="i>=1 && i<=5">
+                        {{dailyWeek[(new Date().getDay()+i)%7]}}
+                    </th>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="daily_icon">
-                                <div class="icon" v-if="result.daily[1].weather[0].main === 'Thunderstorm'"> <!-- 뇌우, 천둥번개와 비 -->
+                    <tr>
+                        <td class="daily_icon" v-for="(data, i) in result.daily" v-if="i>=1 && i<=5">
+                            <div class="icon" v-if="result.daily[i].weather[0].main === 'Thunderstorm'"> <!-- 뇌우, 천둥번개와 비 -->
+                                <div class="cloud2"></div>
+                                <div class="thunder">
+                                    <div class="bolt"></div>
+                                    <div class="bolt"></div>
+                                </div>
+                            </div>
+                            <div class="icon" v-else-if="result.daily[i].weather[0].main === 'Drizzle'"> <!-- 이슬비 -->
+                                <div class="cloud2"></div>
+                                <div class="drizzle"></div>
+                            </div>
+                            <div class="icon" v-else-if="result.daily[i].weather[0].main === 'Rain'"> <!-- 비 -->
+                                <div class="cloud2"></div>
+                                <div class="rain"></div>
+                            </div>
+                            <div class="icon" v-else-if="result.daily[i].weather[0].main === 'Snow'"> <!-- 눈 -->
+                                <div class="cloud2"></div>
+                                <div class="snow">
+                                    <div class="flake"></div>
+                                    <div class="flake"></div>
+                                    <div class="flake"></div>
+                                    <div class="flake"></div>
+                                </div>
+                            </div>
+                            <div class="icon" v-else-if="result.daily[i].weather[0].main === 'Clear'"> <!-- 맑음, 해 -->
+                                <div class="rays">
+                                    <div class="ray"></div>
+                                    <div class="ray"></div>
+                                    <div class="ray"></div>
+                                    <div class="ray"></div>
+                                </div>
+                                <div class="sun"></div>
+                            </div>
+                            <div class="icon" v-else-if="result.daily[i].weather[0].main === 'Clouds'"> <!-- 구름, 흐림 -->
+                                <div class="cloudy">
+                                    <div class="cloud2 small-cloud"></div>
                                     <div class="cloud2"></div>
-                                    <div class="thunder">
-                                        <div class="bolt"></div>
-                                        <div class="bolt"></div>
-                                    </div>
                                 </div>
-                                <div class="icon" v-else-if="result.daily[1].weather[0].main === 'Drizzle'"> <!-- 이슬비 -->
-                                    <div class="cloud2"></div>
-                                    <div class="drizzle"></div>
-                                </div>
-                                <div class="icon" v-else-if="result.daily[1].weather[0].main === 'Rain'"> <!-- 비 -->
-                                    <div class="cloud2"></div>
-                                    <div class="rain"></div>
-                                </div>
-                                <div class="icon" v-else-if="result.daily[1].weather[0].main === 'Snow'"> <!-- 눈 -->
-                                    <div class="cloud2"></div>
-                                    <div class="snow">
-                                        <div class="flake"></div>
-                                        <div class="flake"></div>
-                                        <div class="flake"></div>
-                                        <div class="flake"></div>
-                                    </div>
-                                </div>
-                                <div class="icon" v-else-if="result.daily[1].weather[0].main === 'Clear'"> <!-- 맑음, 해 -->
-                                    <div class="rays">
-                                        <div class="ray"></div>
-                                        <div class="ray"></div>
-                                        <div class="ray"></div>
-                                        <div class="ray"></div>
-                                    </div>
-                                    <div class="sun"></div>
-                                </div>
-                                <div class="icon" v-else-if="result.daily[1].weather[0].main === 'Clouds'"> <!-- 구름, 흐림 -->
-                                    <div class="cloudy">
-                                        <div class="cloud2 small-cloud"></div>
-                                        <div class="cloud2"></div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                날씨아이콘
-                            </td>
-                            <td>
-                                날씨아이콘
-                            </td>
-                            <td>
-                                날씨아이콘
-                            </td>
-                            <td>
-                                날씨아이콘
-                            </td>
-                        </tr>
+                            </div>
+                            </br>
+                            <div class="icon">
+                                <b>{{result.daily[i].temp.max}}&#8451;</b>/{{result.daily[i].temp.min}}&#8451;
+                            </div>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -185,6 +176,7 @@
         data: {
             date: "",
             week: "",
+            dailyWeek: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
             time: "00:00:00",
             cityType: [],
             title: "",
@@ -230,7 +222,7 @@
             getWeather: function(cityInfo) {
                 var date = new Date();
                 var week = new Array("(SUN)", "(MON)", "(TUE)", "(WED)", "(THU)", "(FRI)", "(SAT)");
-                this.week = week[date.getDate()];
+                this.week = week[date.getDay()];
                 this.date = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2);
                 this.time = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 
