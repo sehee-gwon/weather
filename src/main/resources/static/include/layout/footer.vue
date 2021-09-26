@@ -1,7 +1,7 @@
 <template>
   <footer id="footer">
     <div class="container">
-      <section class="links">
+<!--      <section class="links">
         <div class="row">
           <section class="3u 6u(medium) 12u$(small)">
             <h3>Lorem ipsum dolor</h3>
@@ -44,12 +44,12 @@
             </ul>
           </section>
         </div>
-      </section>
+      </section>-->
       <div class="row">
         <div class="8u 12u$(medium)">
           <ul class="copyright">
             <li>&copy; Untitled. All rights reserved.</li>
-            <li>Design: <a href="http://templated.co">TEMPLATED</a></li>
+            <li>Design: <a href="http://templated.co">templated</a></li>
             <li>/img: <a href="http://unsplash.com">Unsplash</a></li>
           </ul>
         </div>
