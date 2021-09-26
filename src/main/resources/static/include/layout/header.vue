@@ -7,7 +7,7 @@
         <li><a href="/weather.html">Weather</a></li>
         <li><a href="/board/list.html">Board</a></li>
         <li><a href="/elements.html">Elements</a></li>
-        <li><a href="/sign-up.html" class="button special">Sign Up</a></li>
+        <li><a href="/login.html" class="button special">Login</a></li>
       </ul>
     </nav>
   </header>
