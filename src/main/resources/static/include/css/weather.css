@@ -2,18 +2,9 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
 :root {
-    --bg-color: #181c1d;
+    --bg-color: #f3f5fb;
     --bg-color-light: rgba(255, 255, 255, 0.2);
-    --color-accent: #ffffff;
-}
-
-html {
-    height: 100%;
-}
-
-body {
-    font-family: 'Pretendard';
-    background: var(--bg-color);
+    --color-accent: #383b43;
 }
 
 #weather {
@@ -23,46 +14,43 @@ body {
     height: 100%;
 }
 
-button {
-    position: relative;
-    z-index: 1;
-}
-
 .container {
     position: relative;
     text-align: center;
 }
 
-.weather_frame {
-    color: #ffffff;
-    width: 80%;
-    margin: 10em auto auto auto;
+.image.fit {
+    background-color: var(--bg-color);
+    display: inline-block !important;
 }
 
-.weather_frame .row {
+.weather_frame {
+    color: var(--color-accent);
+    width: 80%;
+    margin: 3em auto auto auto;
+}
+
+.weather_frame .weather_sub {
     display: flex;
     align-content: center;
     justify-content: center;
     align-items: center;
 }
 
-.weather_frame .row .info {
+.weather_frame .weather_sub .info {
     text-align: left;
     margin-left: 4em;
-}
-
-.table td, th, tr{
-    border: 1px solid;
-    border-color: var(--color-accent);
-    color: var(--color-accent);
+    font-size: 1.35em;
+    font-weight: bold;
+    z-index: 2;
 }
 
 /* 날씨 아이콘 - 메인 */
 .icon {
-    margin: 0.5em 0.5em 0 0;
     width: 4em;
     height: 4em;
     font-size: 2.5em;
+    z-index: 2;
 }
 
 .icon .cloud2 {

@@ -1,6 +1,6 @@
 <template>
-  <header id="header">
-    <h1><a href="/">Transit</a></h1>
+  <div id="header">
+    <h1><a href="/">Daily Weather</a></h1>
     <nav id="nav">
       <ul>
         <li><a href="/">Home</a></li>
@@ -10,5 +10,11 @@
         <li><a href="/login.html" class="button special">Login</a></li>
       </ul>
     </nav>
-  </header>
+  </div>
 </template>
+
+<script>
+  /*export default {
+
+  }*/
+</script>
