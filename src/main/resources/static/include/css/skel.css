@@ -10,6 +10,14 @@
 		box-sizing: border-box;
 	}
 
+	.sns {
+		margin: 15px;
+	}
+
+	.signup-title {
+		margin: 19px 0 8px;
+	}
+
 /* Container */
 
 	.container {
@@ -18,6 +26,9 @@
 
 		/* width: (containers) */
 		width: 1200px;
+	}
+	.login.container {
+		width: 700px;
 	}
 
 	/* Modifiers */
@@ -245,3 +256,7 @@
 		.\-3u { margin-left: 25% }
 		.\-2u { margin-left: 16.6666666667% }
 		.\-1u { margin-left: 8.3333333333% }
+
+		.margin {
+			margin-top: 2em;
+		}

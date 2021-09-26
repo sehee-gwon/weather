@@ -421,7 +421,7 @@ input[type="radio"] + label:before {
 .box > :last-child,
 .box > :last-child > :last-child,
 .box > :last-child > :last-child > :last-child {
-    margin-bottom: 0;
+    /*margin-bottom: 0;*/
 }
 
 .box.alt {
