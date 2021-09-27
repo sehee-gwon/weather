@@ -20,7 +20,7 @@
     </select>
 
     <insert id="insertUser" parameterType="com.weather.user.domain.User">
-        INSERT INTO user (login_id, password, user_name, email, phone_number, created_date)
-        VALUES (#{loginId}, #{password}, #{userName}, #{email}, #{phoneNumber}, DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'));
+        INSERT INTO user (user_name, login_id, password, created_date)
+        VALUES (#{userName}, #{loginId}, #{password}, DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'));
     </insert>
 </mapper>

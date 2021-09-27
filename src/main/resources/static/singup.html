@@ -28,29 +28,29 @@
                             <h2>Sign Up</h2>
                         </header>
 
-                        <form method="post" action="#">
+                        <form method="post" action="/user/join">
                             <div class="row uniform 50%">
-                                <h4 class="signup-title">Name: </h4>
+                                <label class="signup-title" for="name"><h4>Name: </h4></label>
                                 <div class="12u 12u$">
-                                    <input type="text" name="name" id="name" value="" placeholder="name" />
+                                    <input type="text" name="userName" id="name" placeholder="name" />
                                 </div>
-                                <h4 class="signup-title">Email: </h4>
+                                <label class="signup-title" for="loginId"><h4>Email: </h4></label>
                                 <div class="12u 12u$">
-                                    <input type="text" Email="Email" id="Email" value="" placeholder="Email" />
+                                    <input type="email" name="loginId" id="loginId" placeholder="Email" />
                                 </div>
-                                <h4 class="signup-title">Password: </h4>
+                                <label class="signup-title" for="password"><h4>Password: </h4></label>
                                 <div class="12u 12u$">
-                                    <input type="password" password="password" id="password" value="" placeholder="password" />
+                                    <input type="password" name="password" id="password" placeholder="password" />
                                 </div>
-                                <h4 class="signup-title">Confirm Password: </h4>
+                                <label class="signup-title" for="confirm-password"><h4>Confirm Password: </h4></label>
                                 <div class="12u 12u$">
-                                    <input type="password" password="password" id="confirm-password" value="" placeholder="confirm-password" />
+                                    <input type="password" name="confirm-password" id="confirm-password" placeholder="confirm-password" />
                                 </div>
 
                                 <div class="margin 12u 12u$">
-                                    <a href="#" class="button fit">sign up</a>
+                                    <input type="submit" class="button fit">sign up</input>
                                 </div>
-                          </div>
+                            </div>
                         </form>
                     </section>
                 </div>

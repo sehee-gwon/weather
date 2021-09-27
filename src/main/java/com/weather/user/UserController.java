@@ -36,8 +36,8 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String join(@RequestBody User user) {
+    public String join(User user) {
         userService.insertUser(user);
-        return "OK";
+        return "redirect:/login.html";
     }
 }
