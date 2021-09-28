@@ -450,7 +450,6 @@
     font-size: 1.0em;
 }
 
-
 /* 날씨 이펙트 */
 /* thunderstorm :: 뇌우 */
 .effect#thunderstorm #thunderstorm-canvas {
@@ -463,72 +462,13 @@
 /* rain :: 비 */
 /* drizzle :: 이슬비 */
 /* thunderstorm :: 뇌우 */
-.effect#thunderstorm .back-row,
-.effect#rain .back-row,
-.effect#drizzle .back-row {
-    z-index: 1;
-    opacity: 0.5;
-}
-
-.effect#thunderstorm .drop,
-.effect#rain .drop {
+.effect#rain #rain-canvas,
+.effect#drizzle #rain-canvas,
+.effect#thunderstorm #rain-canvas {
     position: absolute;
-    width: 15px;
-    height: 120px;
-    pointer-events: none;
-    animation: drop 0.5s linear infinite;
-}
-
-.effect#drizzle .drop {
-    position: absolute;
-    width: 15px;
-    height: 10px;
-    pointer-events: none;
-    animation: drop 0.5s linear infinite;
-}
-
-@keyframes drop {
-    0% {
-        transform: translateY(0vh);
-    }
-    75% {
-        transform: translateY(20vh);
-    }
-    100% {
-        transform: translateY(46vh);
-    }
-}
-
-.effect#thunderstorm .stem,
-.effect#rain .stem {
-    width: 2px;
-    height: 100%;
-    margin-left: 7px;
-    background: linear-gradient(to bottom, rgba(56, 59, 67, 0), rgba(56, 59, 67, 0.25));
-    animation: stem 0.5s linear infinite;
-}
-
-.effect#drizzle .stem {
-    width: 2px;
-    height: 100%;
-    margin-left: 7px;
-    background: linear-gradient(to bottom, rgba(56, 59, 67, 0), rgba(56, 59, 67, 0.25));
-    animation: stem 0.5s linear infinite;
-}
-
-@keyframes stem {
-    0% {
-        opacity: 1;
-    }
-    65% {
-        opacity: 1;
-    }
-    75% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 0;
-    }
+    top: 0;
+    left: 0;
+    z-index: 0;
 }
 
 /* snow :: 눈 */
