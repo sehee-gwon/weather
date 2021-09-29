@@ -1,0 +1,15 @@
+spring:
+  devtools:
+    restart:
+      enabled: true
+  thymeleaf:
+    cache: false
+    prefix: file:src/main/resources/static/
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/weather?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    username: weatherman
+    password: 293702
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapper-locations: /mapper/**/*.xml
