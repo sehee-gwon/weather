@@ -50,7 +50,6 @@
           <ul class="copyright">
             <li>&copy; Untitled. All rights reserved.</li>
             <li>Design: <a href="http://templated.co">templated</a></li>
-            <li>/img: <a href="http://unsplash.com">Unsplash</a></li>
           </ul>
         </div>
         <div class="4u$ 12u$(medium)">
