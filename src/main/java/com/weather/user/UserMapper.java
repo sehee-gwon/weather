@@ -18,4 +18,6 @@ public interface UserMapper {
      * @param user
      */
     void insertUser(User user);
+
+    int checkDuplicate(String loginId);
 }

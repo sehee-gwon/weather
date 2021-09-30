@@ -16,4 +16,6 @@ public interface UserService {
      * @param user
      */
     void insertUser(User user);
+
+    int checkDuplicate(String loginId);
 }

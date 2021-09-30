@@ -4,12 +4,10 @@ import com.weather.user.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,8 +34,21 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String join(User user) {
-        userService.insertUser(user);
-        return "redirect:/login.html";
+    public ResponseEntity join(@RequestBody User user) {
+        try {
+            if (userService.checkDuplicate(user.getLoginId()) > 0) {
+                throw new IllegalArgumentException("사용중인 아이디입니다.");
+            }
+
+            userService.insertUser(user);
+            return (ResponseEntity) ResponseEntity.ok();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/check")
+    public ResponseEntity checkDuplicate(@RequestParam String loginId) {
+        return ResponseEntity.ok(userService.checkDuplicate(loginId));
     }
 }

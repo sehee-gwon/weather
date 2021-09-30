@@ -20,4 +20,9 @@ public class UserServiceImpl implements UserService {
     public void insertUser(User user) {
         userMapper.insertUser(user);
     }
+
+    @Override
+    public int checkDuplicate(String loginId) {
+        return userMapper.checkDuplicate(loginId);
+    }
 }
