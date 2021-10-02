@@ -44,6 +44,9 @@ dependencies {
     // Devtools
     runtimeOnly('org.springframework.boot:spring-boot-devtools')
 
+    // BeanValidation - BindingResult
+    implementation('org.springframework.boot:spring-boot-starter-validation')
+
 }
 
 tasks {

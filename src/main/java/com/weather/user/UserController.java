@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,14 +36,17 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity join(@RequestBody User user) {
+    public ResponseEntity join(@RequestBody @Validated User user, BindingResult bindingResult) {
         try {
+            if (bindingResult.hasErrors()) {
+                throw new Exception("잘못된 접근입니다.");
+            }
             if (userService.checkDuplicate(user.getLoginId()) > 0) {
-                throw new IllegalArgumentException("사용중인 아이디입니다.");
+                throw new Exception("이미 사용중인 아이디입니다.");
             }
 
             userService.insertUser(user);
-            return (ResponseEntity) ResponseEntity.ok();
+            return ResponseEntity.ok("success");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
