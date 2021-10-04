@@ -23,4 +23,10 @@
         INSERT INTO user (user_name, login_id, password, created_date)
         VALUES (#{userName}, #{loginId}, #{password}, DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'));
     </insert>
+
+    <select id="checkDuplicate" parameterType="String" resultType="int">
+        SELECT count(*)
+        FROM user
+        WHERE login_id = #{loginId}
+    </select>
 </mapper>

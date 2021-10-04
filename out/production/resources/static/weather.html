@@ -44,121 +44,116 @@
 					<div id="effect_zone" class="image fit" v-if="result.current.weather != null">
 						<div class="weather_frame">
 							<!--<h1> Weather Board </h1>-->
-							<div class="weather_sub">
-								<div class="icon" v-if="result.current.weather[0].main === 'thunderstorm'"> <!-- 뇌우, 천둥번개와 비 -->
-									<div class="cloud2"></div>
-									<div class="thunder">
-										<div class="bolt"></div>
-										<div class="bolt"></div>
-									</div>
-								</div>
-								<div class="icon" v-else-if="result.current.weather[0].main === 'drizzle'"> <!-- 이슬비 -->
-									<div class="cloud2"></div>
-									<div class="drizzle"></div>
-								</div>
-								<div class="icon" v-else-if="result.current.weather[0].main === 'rain'"> <!-- 비 -->
-									<div class="cloud2"></div>
-									<div class="rain"></div>
-								</div>
-								<div class="icon" v-else-if="result.current.weather[0].main === 'snow'"> <!-- 눈 -->
-									<div class="cloud2"></div>
-									<div class="snow">
-										<div class="flake"></div>
-										<div class="flake"></div>
-										<div class="flake"></div>
-										<div class="flake"></div>
-									</div>
-								</div>
-								<div class="icon" v-else-if="result.current.weather[0].main === 'clear'"> <!-- 맑음, 해 -->
-									<div class="rays">
-										<div class="ray"></div>
-										<div class="ray"></div>
-										<div class="ray"></div>
-										<div class="ray"></div>
-									</div>
-									<div class="sun"></div>
-								</div>
-								<div class="icon" v-else-if="result.current.weather[0].main === 'clouds'"> <!-- 구름, 흐림 -->
-									<div class="cloudy">
-										<div class="cloud2 small-cloud"></div>
+							<div class="area">
+								<section>
+									<div class="icon" v-if="result.current.weather[0].main === 'thunderstorm'"> <!-- 뇌우, 천둥번개와 비 -->
 										<div class="cloud2"></div>
+										<div class="thunder">
+											<div class="bolt"></div>
+											<div class="bolt"></div>
+										</div>
 									</div>
-								</div>
-								<!--<div class="icon">
-                                    <div class="extreme text-center">
-                                        <div class="harsh-wind"></div>
-                                        <div class="harsh-wind"></div>
-                                        <div class="harsh-wind"></div>
-                                        <div class="harsh-wind"></div>
-                                        <div class="harsh-wind"></div>
-                                        <div class="harsh-wind"></div>
-                                        <div class="harsh-wind"></div>
-                                    </div>
-                                </div>-->
-								<div class="info">
-									{{result.current.weather[0].description}} <br/>
-									<span>기온 </span> {{result.current.temp}} &#8451; <br/>
-									습도 {{result.current.humidity}}% <br/>
-									풍속 {{result.current.wind_speed}}m/s
-								</div>
+									<div class="icon" v-else-if="result.current.weather[0].main === 'drizzle'"> <!-- 이슬비 -->
+										<div class="cloud2"></div>
+										<div class="drizzle"></div>
+									</div>
+									<div class="icon" v-else-if="result.current.weather[0].main === 'rain'"> <!-- 비 -->
+										<div class="cloud2"></div>
+										<div class="rain"></div>
+									</div>
+									<div class="icon" v-else-if="result.current.weather[0].main === 'snow'"> <!-- 눈 -->
+										<div class="cloud2"></div>
+										<div class="snow">
+											<div class="flake"></div>
+											<div class="flake"></div>
+											<div class="flake"></div>
+											<div class="flake"></div>
+										</div>
+									</div>
+									<div class="icon" v-else-if="result.current.weather[0].main === 'clear'"> <!-- 맑음, 해 -->
+										<div class="rays">
+											<div class="ray"></div>
+											<div class="ray"></div>
+											<div class="ray"></div>
+											<div class="ray"></div>
+										</div>
+										<div class="sun"></div>
+									</div>
+									<div class="icon" v-else-if="result.current.weather[0].main === 'clouds'"> <!-- 구름, 흐림 -->
+										<div class="cloudy">
+											<div class="cloud2 small-cloud"></div>
+											<div class="cloud2"></div>
+										</div>
+									</div>
+									<!--<div class="icon">
+                                        <div class="extreme text-center">
+                                            <div class="harsh-wind"></div>
+                                            <div class="harsh-wind"></div>
+                                            <div class="harsh-wind"></div>
+                                            <div class="harsh-wind"></div>
+                                            <div class="harsh-wind"></div>
+                                            <div class="harsh-wind"></div>
+                                            <div class="harsh-wind"></div>
+                                        </div>
+                                    </div>-->
+									<div :class="'info ' + (result.current.weather[0].main === 'clouds' ? 'type1' : 'type2')">
+										<span>
+											{{result.current.weather[0].description}} <br/>
+											기온 {{result.current.temp}} &#8451; <br/>
+											습도 {{result.current.humidity}}% <br/>
+											풍속 {{result.current.wind_speed}}m/s
+										</span>
+									</div>
+								</section>
 							</div>
 
-							<table class="weather_table" v-if="result.daily.length != 0">
-								<thead>
-									<th v-for="(data, i) in result.daily" v-if="i>=1 && i<=5">
-										{{dailyWeek[(new Date().getDay() + i) % 7]}}
-									</th>
-								</thead>
-								<tbody>
-									<tr>
-										<td class="daily_icon" v-for="(data, i) in result.daily" v-if="i>=1 && i<=5">
-											<div class="icon" v-if="result.daily[i].weather[0].main === 'Thunderstorm'"> <!-- 뇌우, 천둥번개와 비 -->
-												<div class="cloud2"></div>
-												<div class="thunder">
-													<div class="bolt"></div>
-													<div class="bolt"></div>
-												</div>
-											</div>
-											<div class="icon" v-else-if="result.daily[i].weather[0].main === 'Drizzle'"> <!-- 이슬비 -->
-												<div class="cloud2"></div>
-												<div class="drizzle"></div>
-											</div>
-											<div class="icon" v-else-if="result.daily[i].weather[0].main === 'Rain'"> <!-- 비 -->
-												<div class="cloud2"></div>
-												<div class="rain"></div>
-											</div>
-											<div class="icon" v-else-if="result.daily[i].weather[0].main === 'Snow'"> <!-- 눈 -->
-												<div class="cloud2"></div>
-												<div class="snow">
-													<div class="flake"></div>
-													<div class="flake"></div>
-													<div class="flake"></div>
-													<div class="flake"></div>
-												</div>
-											</div>
-											<div class="icon" v-else-if="result.daily[i].weather[0].main === 'Clear'"> <!-- 맑음, 해 -->
-												<div class="rays">
-													<div class="ray"></div>
-													<div class="ray"></div>
-													<div class="ray"></div>
-													<div class="ray"></div>
-												</div>
-												<div class="sun"></div>
-											</div>
-											<div class="icon" v-else-if="result.daily[i].weather[0].main === 'Clouds'"> <!-- 구름, 흐림 -->
-												<div class="cloudy">
-													<div class="cloud2 small-cloud"></div>
-													<div class="cloud2"></div>
-												</div>
-											</div>
-											</br>
-											<div class="icon">
-												<b>{{result.daily[i].temp.max}}&#8451;</b>/{{result.daily[i].temp.min}}&#8451;
-											</div>
-										</td>
-									</tr>
-								</tbody>
-							</table>
+							<div class="area" v-if="result.daily.length != 0">
+								<section v-for="(data, i) in result.daily" v-if="i>=1 && i<=6">
+									<div class="daily icon" v-if="data.weather[0].main === 'Thunderstorm'"> <!-- 뇌우, 천둥번개와 비 -->
+										<div class="cloud2"></div>
+										<div class="thunder">
+											<div class="bolt"></div>
+											<div class="bolt"></div>
+										</div>
+									</div>
+									<div class="daily icon" v-else-if="data.weather[0].main === 'Drizzle'"> <!-- 이슬비 -->
+										<div class="cloud2"></div>
+										<div class="drizzle"></div>
+									</div>
+									<div class="daily icon" v-else-if="data.weather[0].main === 'Rain'"> <!-- 비 -->
+										<div class="cloud2"></div>
+										<div class="rain"></div>
+									</div>
+									<div class="daily icon" v-else-if="data.weather[0].main === 'Snow'"> <!-- 눈 -->
+										<div class="cloud2"></div>
+										<div class="snow">
+											<div class="flake"></div>
+											<div class="flake"></div>
+											<div class="flake"></div>
+											<div class="flake"></div>
+										</div>
+									</div>
+									<div class="daily icon" v-else-if="data.weather[0].main === 'Clear'"> <!-- 맑음, 해 -->
+										<div class="rays">
+											<div class="ray"></div>
+											<div class="ray"></div>
+											<div class="ray"></div>
+											<div class="ray"></div>
+										</div>
+										<div class="sun"></div>
+									</div>
+									<div class="daily icon" v-else-if="data.weather[0].main === 'Clouds'"> <!-- 구름, 흐림 -->
+										<div class="cloudy">
+											<div class="cloud2 small-cloud"></div>
+											<div class="cloud2"></div>
+										</div>
+									</div>
+									<p>
+										<span>{{dailyWeek[(new Date().getDay() + i) % 7]}}</span> <br/>
+										<span>{{result.daily[i].temp.max}}&#8451;</span>/{{result.daily[i].temp.min}}&#8451;
+									</p>
+								</section>
+							</div>
 						</div>
 
 						<template v-if="result.current.weather != null">
@@ -262,8 +257,6 @@
 						vm.city.lat = e.target.options[e.target.selectedIndex].dataset.lat;
 						vm.city.lon = e.target.options[e.target.selectedIndex].dataset.lon;
 
-						vm.clear();
-
 						axios.get('/api/open-weather/data', {
 							params: {
 								code: vm.city.code,
@@ -304,9 +297,6 @@
 						} else if (main === "snow") {
 							vm.snow();
 						}
-					},
-					clear: function() {
-						// clear out everything
 					},
 					thunderstorm: function() {
 						var zone			 = document.getElementById('effect_zone');

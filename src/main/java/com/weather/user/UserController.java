@@ -21,9 +21,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/info")
-    public String info(Model model) {
-        List<User> list = null;
+        @GetMapping("/info")
+        public String info(Model model) {
+            List<User> list = null;
 
         try {
             list = userService.getUserList();
@@ -56,4 +56,6 @@ public class UserController {
     public ResponseEntity checkDuplicate(@RequestParam String loginId) {
         return ResponseEntity.ok(userService.checkDuplicate(loginId));
     }
+
+
 }
