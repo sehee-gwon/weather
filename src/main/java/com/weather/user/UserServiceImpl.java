@@ -25,4 +25,5 @@ public class UserServiceImpl implements UserService {
     public int checkDuplicate(String loginId) {
         return userMapper.checkDuplicate(loginId);
     }
+
 }
