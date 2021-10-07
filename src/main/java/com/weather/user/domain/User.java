@@ -22,7 +22,7 @@ public class User {
     private String loginId;
 
     @NotEmpty
-    @Size(max = 60)
+    @Size(max = 120)
     private String password;
 
     private String createdDate;

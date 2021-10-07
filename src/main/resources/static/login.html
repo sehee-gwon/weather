@@ -17,48 +17,53 @@
 	</head>
 	<body>
 		<!-- Header -->
-		<div id="weather">
+		<div id="weather" v-cloak>
 			<layout-header></layout-header>
 
 			<!-- Main -->
 			<section id="main" class="wrapper">
 				<div class="login container">
-						<section class="box">
-							<header class="major">
-								<h2>Log In</h2>
-							</header>
-							<form method="post" action="#">
-								<div class="row uniform 50%">
-									<div class="12u 12u$">
-										<input type="text" Email="Email" id="Email" value="" placeholder="Email" />
-									</div>
-									<div class="12u 12u$">
-										<input type="password" password="password" id="password" value="" placeholder="password" />
-									</div>
-								</div>
-							</form>
+					<section class="box">
+						<header class="major">
+							<h2>Log In</h2>
+						</header>
 
-							<div class="margin 12u 12u$">
-								<a href="#" class="button fit">log in</a>
+						<form @submit.prevent="login" method="post">
+							<div class="row uniform 50%">
+								<label class="login-title" for="loginId"><h4>Email: </h4></label>
+								<div class="12u 12u$">
+									<input type="email" v-model="loginId" id="loginId" placeholder="Email" />
+								</div>
+
+								<label class="login-title" for="password"><h4>Password: </h4></label>
+								<div class="12u 12u$">
+									<input type="password" v-model="password" id="password" placeholder="password" />
+								</div>
+
+								<div class="margin 12u 12u$">
+									<input type="submit" class="button fit" value="login" />
+								</div>
 							</div>
-							<div class="12u 12u$">
-								<a href="/singup.html" class="button alt fit">sign up</a>
-							</div>
-							<div class="margin align-center">
-								<span>SNS 간편 로그인</span>
-							</div>
-							<div class="margin align-center">
-								<a href="#" class="sns">
-									<img src="include/img/naver_icon.png" />
-								</a>
-								<a href="#" class="sns">
-									<img src="include/img/kakao_icon.png" />
-								</a>
-								<a href="#" class="sns">
-									<img src="include/img/google_icon.png" />
-								</a>
-							</div>
-						</section>
+						</form>
+
+						<div class="12u 12u$">
+							<a href="/singup.html" class="button alt fit">sign up</a>
+						</div>
+						<div class="margin align-center">
+							<span>SNS 간편 로그인</span>
+						</div>
+						<div class="margin align-center">
+							<a href="#" class="sns">
+								<img src="include/img/naver_icon.png" />
+							</a>
+							<a href="#" class="sns">
+								<img src="include/img/kakao_icon.png" />
+							</a>
+							<a href="#" class="sns">
+								<img src="include/img/google_icon.png" />
+							</a>
+						</div>
+					</section>
 				</div>
 					<!--
 					<a href="#" class="image fit"><img src="/include/img/pic07.jpg" alt="" /></a>
@@ -73,6 +78,7 @@
 		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> <!-- vue 개발버전, 도움되는 콘솔 경고를 포함. -->
 		<script src="https://unpkg.com/http-vue-loader"></script>
 		<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script> <!-- axios -->
 		<script src="/include/js/jquery.min.js"></script>
 		<script src="/include/js/skel.min.js"></script>
 		<script src="/include/js/skel-layers.min.js"></script>
@@ -84,6 +90,26 @@
 				components: {
 					'layout-header': httpVueLoader('/include/layout/header.vue'),
 					'layout-footer': httpVueLoader('/include/layout/footer.vue')
+				},
+				data: {
+					loginId: "",
+					password: ""
+				},
+				method: {
+					login: function () {
+						var params = {
+							loginId: vm.loginId,
+							password: vm.password
+						}
+						axios.post("/user/login", params)
+							.then(function (response) {
+								console.log(response);
+								location.href = "index.html";
+							})
+							.catch(function (error) {
+								console.error(error.response);
+							});
+					}
 				}
 			})
 		</script>
