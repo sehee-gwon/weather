@@ -101,7 +101,7 @@
 							loginId: vm.loginId,
 							password: vm.password
 						}
-						axios.post("/user/login", params)
+						axios.post("/auth/login", params)
 							.then(function (response) {
 								console.log(response);
 								location.href = "index.html";

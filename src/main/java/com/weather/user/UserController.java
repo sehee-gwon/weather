@@ -62,10 +62,10 @@ public class UserController {
         return ResponseEntity.ok(userService.checkDuplicate(loginId));
     }
 
-    @PostMapping("/login")
-    public ResponseEntity login(@RequestParam String userLogin, @RequestParam String userPassword) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-        return ResponseEntity.ok("login success");
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity login(@RequestParam String userLogin, @RequestParam String userPassword) {
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//
+//        return ResponseEntity.ok("login success");
+//    }
 }
