@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.3.2.RELEASE'
+        springBootVersion = '2.5.5'
     }
     repositories {
         mavenCentral()
@@ -54,7 +54,9 @@ dependencies {
     testImplementation ('org.springframework.security:spring-security-test')
 
     // JWT
-    implementation ('io.jsonwebtoken:jjwt:0.9.1')
+    compile group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+    runtime group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+    runtime group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 }
 
 tasks {

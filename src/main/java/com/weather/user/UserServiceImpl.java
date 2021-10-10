@@ -2,6 +2,7 @@ package com.weather.user;
 
 import com.weather.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +12,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserMapper userMapper;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Override
     public List<User> getUserList() {
         return userMapper.getUserList();
@@ -18,6 +22,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void insertUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userMapper.insertUser(user);
     }
 

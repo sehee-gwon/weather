@@ -1,4 +1,4 @@
-package com.weather.Configuration;
+package com.weather.auth.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
