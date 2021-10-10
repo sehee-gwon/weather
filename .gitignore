@@ -3,4 +3,4 @@
 build
 *.iml
 *.ipr
-application-local-*.yml
+application-local-*

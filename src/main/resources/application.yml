@@ -19,7 +19,7 @@ mybatis:
 logging:
   level:
     com:
-      weather: INFO
+      weather: DEBUG
 
 jwt:
   secret: eyJhbGciOiJIUzUxMiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTYzMzg1Nzc3OSwiaWF0IjoxNjMzODU3Nzc5fQ.pBd5TTFnEFqqpC3w3kUVRTcvXqSEzK2MpCaZcAIOo6f890LW7rOqbJT1l5i0tHAlkMlVbBosmc9hwSr4RfEFfQ
