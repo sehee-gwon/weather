@@ -38,7 +38,7 @@ public class JwtProvider {
     }
 
     public Auth createToken (Authentication authentication) {
-        //
+        // 권한 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
@@ -107,3 +107,26 @@ public class JwtProvider {
         }
     }
 }
+
+/*
+
+JWT 토큰에 관련된 암호화, 복호화, 검증 로직은 다 이곳에서 이루어집니다.
+생성자
+    application.yml 에 정의해놓은 jwt.secret 값을 가져와서 JWT 를 만들 때 사용하는 암호화 키값을 생성합니다.
+generateTokenDto
+    유저 정보를 넘겨받아서 Access Token 과 Refresh Token 을 생성합니다.
+    넘겨받은 유저 정보의 authentication.getName() 메소드가 username 을 가져옵니다.
+    저는 username 으로 Member ID 를 저장했기 때문에 해당 값이 설정될 겁니다.
+    Access Token 에는 유저와 권한 정보를 담고 Refresh Token 에는 아무 정보도 담지 않습니다.
+getAuthentication
+    JWT 토큰을 복호화하여 토큰에 들어 있는 정보를 꺼냅니다.
+    Access Token 에만 유저 정보를 담기 때문에 명시적으로 accessToken 을 파라미터로 받게 했습니다.
+    Refresh Token 에는 아무런 정보 없이 만료일자만 담았습니다.
+    UserDetails 객체를 생생성해서 UsernamePasswordAuthenticationToken 형태로 리턴하는데 SecurityContext 를 사용하기 위한 절차라고 생각하면 됩니다..
+    사실 좀 불필요한 절차라고 생각되지만 SecurityContext 가 Authentication 객체를 저장하기 때문에 어쩔수 없습니다.
+    parseClaims 메소드는 만료된 토큰이어도 정보를 꺼내기 위해서 따로 분리했습니다.
+validateToken
+    토큰 정보를 검증합니다.
+    Jwts 모듈이 알아서 Exception 을 던져줍니다.
+
+*/
