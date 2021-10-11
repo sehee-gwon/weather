@@ -3,5 +3,5 @@
 build
 *.iml
 *.ipr
-out/
+out
 application-local-*
