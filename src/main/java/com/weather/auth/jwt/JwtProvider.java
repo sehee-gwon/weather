@@ -109,7 +109,6 @@ public class JwtProvider {
 }
 
 /*
-
 JWT 토큰에 관련된 암호화, 복호화, 검증 로직은 다 이곳에서 이루어집니다.
 생성자
     application.yml 에 정의해놓은 jwt.secret 값을 가져와서 JWT 를 만들 때 사용하는 암호화 키값을 생성합니다.
@@ -128,5 +127,4 @@ getAuthentication
 validateToken
     토큰 정보를 검증합니다.
     Jwts 모듈이 알아서 Exception 을 던져줍니다.
-
 */
