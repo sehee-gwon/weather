@@ -1,7 +1,7 @@
 package com.weather.user;
 
-import org.apache.ibatis.annotations.Mapper;
 import com.weather.user.domain.User;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 

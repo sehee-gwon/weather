@@ -1,19 +1,17 @@
 package com.weather.user;
 
 import com.weather.user.domain.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    @Autowired
-    UserMapper userMapper;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<User> getUserList() {
@@ -30,5 +28,4 @@ public class UserServiceImpl implements UserService {
     public int checkDuplicate(String loginId) {
         return userMapper.checkDuplicate(loginId);
     }
-
 }
