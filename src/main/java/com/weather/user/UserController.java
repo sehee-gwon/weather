@@ -1,47 +1,32 @@
 package com.weather.user;
 
 import com.weather.user.domain.User;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/api/user")
+@RequiredArgsConstructor
 public class UserController {
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
-
-    @GetMapping("/info")
-    public String info(Model model) {
-        List<User> list = null;
-
-        try {
-            list = userService.getUserList();
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-
-        model.addAttribute("list", list);
-        return "OK";
-    }
-
-    @PostMapping("/join")
-    public ResponseEntity join(@RequestBody @Validated User user, BindingResult bindingResult) {
+    @PostMapping("/signup")
+    public ResponseEntity signup(@RequestBody @Validated User user, BindingResult bindingResult) {
         try {
             if (bindingResult.hasErrors()) {
                 throw new Exception("잘못된 접근입니다.");
             }
-            if (userService.checkDuplicate(user.getLoginId()) > 0) {
+            if (userService.getUserByLoginId(user.getLoginId()) != null) {
                 throw new Exception("이미 사용중인 아이디입니다.");
             }
 
@@ -53,14 +38,7 @@ public class UserController {
     }
 
     @PostMapping("/check")
-    public ResponseEntity checkDuplicate(@RequestParam String loginId) {
-        return ResponseEntity.ok(userService.checkDuplicate(loginId));
+    public ResponseEntity check(@RequestParam String loginId) {
+        return ResponseEntity.ok(userService.getUserByLoginId(loginId));
     }
-
-//    @PostMapping("/login")
-//    public ResponseEntity login(@RequestParam String userLogin, @RequestParam String userPassword) {
-//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//
-//        return ResponseEntity.ok("login success");
-//    }
 }

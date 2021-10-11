@@ -1,4 +1,4 @@
-package com.weather.enumeration;
+package com.weather.common.enumeration;
 
 public enum CityType {
     SEOUL("Seoul", "서울시", 37.5683, 126.9778),
@@ -64,11 +64,11 @@ public enum CityType {
         return this.title;
     }
 
-    public double getlat() {
+    public double getLat() {
         return this.lat;
     }
 
-    public double getlon() {
+    public double getLon() {
         return this.lon;
     }
 }

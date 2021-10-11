@@ -47,7 +47,7 @@
 						</form>
 
 						<div class="12u 12u$">
-							<a href="/singup.html" class="button alt fit">sign up</a>
+							<a href="/signup.html" class="button alt fit">sign up</a>
 						</div>
 						<div class="margin align-center">
 							<span>SNS 간편 로그인</span>
@@ -95,18 +95,18 @@
 					loginId: "",
 					password: ""
 				},
-				method: {
+				methods: {
 					login: function () {
 						var params = {
 							loginId: vm.loginId,
 							password: vm.password
 						}
 						axios.post("/api/auth/login", params)
-							.then(function (response) {
+							.then(function(response) {
 								console.log(response);
-								location.href = "index.html";
+								//location.href = "index.html";
 							})
-							.catch(function (error) {
+							.catch(function(error) {
 								console.error(error.response);
 							});
 					}

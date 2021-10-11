@@ -1,6 +1,5 @@
 package com.weather.auth.jwt;
 
-import com.mysql.cj.util.DnsSrv;
 import com.weather.auth.domain.Auth;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -15,7 +14,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import javax.xml.crypto.Data;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,58 +30,76 @@ public class JwtProvider {
 
     private final Key key;
 
-    public JwtProvider (@Value("${jwt.secret}") String secretKey) {
+    /**
+     * 생성자, SecretKey 암호화
+     * @param secretKey
+     */
+    public JwtProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public Auth createToken (Authentication authentication) {
-        // 권한 가져오기
+    /**
+     * 토큰 생성
+     * @param authentication
+     * @return
+     */
+    public Auth createToken(Authentication authentication) {
+        // 권한 정보 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
 
-        // Access Token
+        // Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY ,authorities)
+                .claim(AUTHORITIES_KEY, authorities)
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
-        // Refresh Token
+        // Refresh Token 생성
         String refreshToken = Jwts.builder()
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
-        return Auth.builder().accessToken(accessToken).refreshToken(refreshToken).expiration(accessTokenExpiresIn.getTime()).build();
+        return new Auth(accessToken, refreshToken, accessTokenExpiresIn.getTime());
     }
 
-    public Authentication getAuthentication (String accessToken) {
-        // Token Decryption
+    /**
+     * 인증 정보 조회
+     * @param accessToken
+     * @return
+     */
+    public Authentication getAuthentication(String accessToken) {
+        // 액세스 토큰 복호화
         Claims claims = parseClaims(accessToken);
 
-        if (claims.get(AUTHORITIES_KEY)==null) {
-            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+        if (claims.get(AUTHORITIES_KEY) == null) {
+            throw new RuntimeException("인증 정보가 없는 토큰입니다.");
         }
 
-        // Claim에서 권한 정보 가져오기
+        // 액세스 토큰 클레임에서 권한 정보 조회
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        // UserDetails 객체를 만들어서 Authentication 리턴
+        // UserDetails 를 이용하여 UsernamePasswordAuthenticationToken 호출, 인증 완료 객체 생성
         UserDetails principal = new User(claims.getSubject(), "", authorities);
-
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
-    public boolean validateToken (String token) {
+    /**
+     * 토큰 검증
+     * @param token
+     * @return
+     */
+    public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
@@ -99,6 +115,11 @@ public class JwtProvider {
         return false;
     }
 
+    /**
+     * 토큰 클레임 조회
+     * @param accessToken
+     * @return
+     */
     private Claims parseClaims(String accessToken) {
         try {
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();

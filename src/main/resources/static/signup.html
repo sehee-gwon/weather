@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<!--
+    Transit by TEMPLATED
+    templated.co @templatedco
+    Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+    <head>
+        <meta charset="UTF-8">
+        <title>Generic - Transit by TEMPLATED</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        <link rel="stylesheet" href="/include/css/skel.css" />
+        <link rel="stylesheet" href="/include/css/common.css" />
+        <link rel="stylesheet" href="/include/css/style-xlarge.css" />
+    </head>
+        <body>
+        <!-- Header -->
+        <div id="weather" v-cloak>
+            <layout-header></layout-header>
+
+            <!-- Main -->
+            <section id="main" class="wrapper">
+                <div class="login container">
+                    <section class="box">
+                        <header class="major">
+                            <h2>Sign Up</h2>
+                        </header>
+
+                        <form @submit.prevent="signup" method="post">
+                            <div class="row uniform 50%">
+                                <label class="signup-title" for="name"><h4>Name: </h4></label>
+                                <div class="12u 12u$">
+                                    <input type="text" @blur="validation('userName')" v-model="userName" id="name" placeholder="name" maxlength="20" />
+                                    <span v-if="validator.userNameMessage !== ''">{{validator.userNameMessage}}</span>
+                                </div>
+
+                                <label class="signup-title" for="loginId"><h4>Email: </h4></label>
+                                <div class="12u 12u$">
+                                    <input type="email" @blur="validation('loginId')" v-model="loginId" id="loginId" placeholder="Email" maxlength="60" />
+                                    <span v-if="validator.loginIdMessage !== ''">{{validator.loginIdMessage}}</span>
+                                </div>
+
+                                <label class="signup-title" for="password"><h4>Password: </h4></label>
+                                <div class="12u 12u$">
+                                    <input type="password" @blur="validation('password')" v-model="password" id="password" placeholder="password" maxlength="40" />
+                                    <span v-if="validator.passwordMessage !== ''">{{validator.passwordMessage}}</span>
+                                </div>
+
+                                <label class="signup-title" for="confirm-password"><h4>Confirm Password: </h4></label>
+                                <div class="12u 12u$">
+                                    <input type="password" @blur="validation('confirmPassword')" v-model="confirmPassword" id="confirm-password" placeholder="confirm-password" maxlength="40" />
+                                    <span v-if="validator.confirmPasswordMessage !== ''">{{validator.confirmPasswordMessage}}</span>
+                                </div>
+
+                                <div class="margin 12u 12u$">
+                                    <input type="submit" class="button fit" value="sign up" />
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+                </div>
+            </section>
+
+            <layout-footer></layout-footer>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> <!-- vue 개발버전, 도움되는 콘솔 경고를 포함. -->
+        <script src="https://unpkg.com/http-vue-loader"></script>
+        <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script> <!-- axios -->
+        <script src="/include/js/jquery.min.js"></script>
+        <script src="/include/js/skel.min.js"></script>
+        <script src="/include/js/skel-layers.min.js"></script>
+        <script src="/include/js/init.js"></script>
+
+        <script type="text/javascript">
+            var vm = new Vue({
+                el: "#weather",
+                components: {
+                    "layout-header": httpVueLoader("/include/layout/header.vue"),
+                    "layout-footer": httpVueLoader("/include/layout/footer.vue")
+                },
+                data: {
+                    userName: "",
+                    loginId: "",
+                    password: "",
+                    confirmPassword: "",
+                    validator: {
+                        userNameMessage: "",
+                        loginIdMessage: "",
+                        passwordMessage: "",
+                        confirmPasswordMessage: ""
+                    }
+                },
+                methods: {
+                    signup: function () {
+                        this.validation("userName, loginId, password, confirmPassword");
+
+                        //유효성 검사를 하나라도 통과하지 못하면 회원가입 불가
+                        if (vm.validator.userNameMessage !== ""
+                            || vm.validator.loginIdMessage !== ""
+                            || vm.validator.passwordMessage !== ""
+                            || vm.validator.confirmPasswordMessage !== "") {
+                            return;
+                        }
+
+                        var params = {
+                            userName: vm.userName,
+                            loginId: vm.loginId,
+                            password: vm.password,
+                            confirmPassword: vm.confirmPassword
+                        }
+                        axios.post("/api/user/signup", params)
+                            .then(function(response) {
+                                alert("회원가입이 완료되었습니다.");
+                                location.href = "login.html";
+                            })
+                            .catch(function (error) {
+                                console.error(error.response);
+                            });
+                    },
+                    validation: function (types) {
+                        types.split(",").forEach(type => {
+                            type = type.trim();
+
+                            if (type === "userName") {
+                                if (vm.userName === "") {
+                                    vm.validator.userNameMessage = "필수 정보입니다.";
+                                } else {
+                                    vm.validator.userNameMessage = "";
+                                }
+                            }
+                            if (type === "loginId") {
+                                if (vm.loginId === "") {
+                                    vm.validator.loginIdMessage = "필수 정보입니다.";
+                                } else if (!this.validLoginId(vm.loginId)) {
+                                    //이메일 정규식
+                                    vm.validator.loginIdMessage = "잘못된 이메일 형식입니다.";
+                                } else {
+                                    var data = new FormData();
+                                    data.append("loginId", vm.loginId);
+
+                                    axios.post("/api/user/check", data)
+                                        .then(function(response) {
+                                            if (response.data != null && response.data != "") {
+                                                vm.validator.loginIdMessage = "이미 사용중인 아이디입니다.";
+                                            } else {
+                                                vm.validator.loginIdMessage = "";
+                                            }
+                                        })
+                                        .catch(function (error) {
+                                            console.error(error.response);
+                                        })
+                                }
+                            }
+                            if (type === "password") {
+                                if (vm.password === "") {
+                                    vm.validator.passwordMessage = "필수 정보입니다.";
+                                } else if (!this.validPassword(vm.password)) {
+                                    //비밀번호 정규식
+                                    vm.validator.passwordMessage = "6~20자이내 영문, 숫자를 사용해주세요. ";
+                                } else {
+                                    vm.validator.passwordMessage = "";
+                                }
+                            }
+                            if (type === "confirmPassword") {
+                                if (vm.confirmPassword === "") {
+                                    vm.validator.confirmPasswordMessage = "필수 정보입니다.";
+                                } else if (vm.password !== vm.confirmPassword) {
+                                    vm.validator.confirmPasswordMessage = "비밀번호가 일치하지 않습니다.";
+                                } else {
+                                    vm.validator.confirmPasswordMessage = "";
+                                }
+                            }
+                        });
+                    },
+                    validLoginId: function (loginId) {
+                        //이메일 정규식
+                        var validLoginId = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                        return validLoginId.test(loginId);
+                    },
+                    validPassword: function (password) {
+                        //비밀번호 정규식(6~20자리, 영문+숫자 조합)
+                        var validPassword = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/;
+                        return validPassword.test(password);
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>

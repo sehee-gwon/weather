@@ -19,5 +19,10 @@ public interface UserMapper {
      */
     void insertUser(User user);
 
-    int checkDuplicate(String loginId);
+    /**
+     * 회원정보 조회
+     * @param loginId
+     * @return
+     */
+    User getUserByLoginId(String loginId);
 }

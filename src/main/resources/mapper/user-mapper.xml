@@ -24,8 +24,8 @@
         VALUES (#{userName}, #{loginId}, #{password}, DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'));
     </insert>
 
-    <select id="checkDuplicate" parameterType="String" resultType="int">
-        SELECT count(*)
+    <select id="getUserByLoginId" parameterType="String" resultMap="UserResult">
+        SELECT *
         FROM user
         WHERE login_id = #{loginId}
     </select>
