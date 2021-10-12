@@ -1,4 +1,4 @@
-package com.weather.auth.config;
+package com.weather.auth.jwt;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

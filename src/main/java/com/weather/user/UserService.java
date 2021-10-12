@@ -1,21 +1,24 @@
 package com.weather.user;
 
 import com.weather.user.domain.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public interface UserService {
-    /**
-     * 회원 목록 조회
-     * @return
-     */
-    List<User> getUserList();
+@Service
+@RequiredArgsConstructor
+public class UserService {
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    /**
-     * 회원 등록
-     * @param user
-     */
-    void insertUser(User user);
+    public void insertUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userMapper.insertUser(user);
+    }
 
-    int checkDuplicate(String loginId);
+    public User getUserByLoginId(String loginId) {
+        return userMapper.getUserByLoginId(loginId);
+    }
 }

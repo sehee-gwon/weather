@@ -51,23 +51,23 @@ public class JwtProvider {
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY ,authorities)
                 .setExpiration(accessTokenExpiresIn)
-                .signWith(key, SignatureAlgorithm.HS512)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
         // Refresh Token
         String refreshToken = Jwts.builder()
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
-                .signWith(key, SignatureAlgorithm.HS512)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
-        return Auth.builder().accessToken(accessToken).refreshToken(refreshToken).expiration(accessTokenExpiresIn.getTime()).build();
+        return new Auth(accessToken, refreshToken, accessTokenExpiresIn.getTime());
     }
 
     public Authentication getAuthentication (String accessToken) {
         // Token Decryption
         Claims claims = parseClaims(accessToken);
 
-        if (claims.get(AUTHORITIES_KEY)==null) {
+        if (claims.get(AUTHORITIES_KEY) == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
 
@@ -99,7 +99,7 @@ public class JwtProvider {
         return false;
     }
 
-    private Claims parseClaims(String accessToken) {
+    private Claims parseClaims (String accessToken) {
         try {
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {

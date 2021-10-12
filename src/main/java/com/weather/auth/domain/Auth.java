@@ -1,10 +1,21 @@
 package com.weather.auth.domain;
 
-import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Builder
+@Getter
+@Setter
+@NoArgsConstructor
 public class Auth {
-    private final String accessToken;
-    private final String refreshToken;
-    private final long expiration;
+    private long userId;
+    private String accessToken;
+    private String refreshToken;
+    private long expiration;
+
+    public Auth (String accessToken, String refreshToken, long expiration) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.expiration = expiration;
+    }
 }

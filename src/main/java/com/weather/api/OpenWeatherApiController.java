@@ -2,11 +2,10 @@ package com.weather.api;
 
 import com.weather.api.domain.City;
 import com.weather.api.domain.OpenWeatherApi;
-import com.weather.enumeration.CityType;
+import com.weather.common.enumeration.CityType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
@@ -34,8 +33,8 @@ public class OpenWeatherApiController {
             map.put("code", cityType.getCode());
             map.put("title", cityType.getTitle());
 
-            map.put("lat", cityType.getlat());
-            map.put("lon", cityType.getlon());
+            map.put("lat", cityType.getLat());
+            map.put("lon", cityType.getLon());
 
             list.add(map);
         }

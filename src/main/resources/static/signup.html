@@ -112,7 +112,7 @@
                         password: vm.password,
                         confirmPassword: vm.confirmPassword
                     }
-                    axios.post("/user/join", params)
+                    axios.post("/api/user/signup", params)
                         .then(function (response) {
                             alert("회원가입이 완료되었습니다.");
                             location.href = "login.html";
@@ -142,7 +142,7 @@
                                 var data = new FormData();
                                 data.append("loginId", vm.loginId);
 
-                                axios.post("/user/check", data)
+                                axios.post("/api/user/check", data)
                                     .then(function (response) {
                                         if (response.data === 1) {
                                             vm.validator.loginIdMessage = "이미 사용중인 아이디입니다.";

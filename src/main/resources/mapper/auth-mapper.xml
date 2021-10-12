@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weather.auth.AuthMapper">
+    <resultMap id="AuthResult" type="com.weather.auth.domain.Auth">
+        <result property="userId" column="user_id"></result>
+        <result property="refreshToken" column="refresh_token"></result>
+        <result property="loginDate" column="login_date"></result>
+        <result property="updatedDate" column="updated_date"></result>
+    </resultMap>
+
+    <insert id="insertAuth" parameterType="com.weather.auth.domain.Auth">
+        INSERT INTO auth (user_id, refresh_token, login_date)
+        VALUES (#{userId}, #{refreshToken}, DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'));
+    </insert>
+
+    <update id="updateAuth" parameterType="com.weather.auth.domain.Auth">
+        UPDATE auth
+        SET refresh_token = #{refreshToken}
+        WHERE user_id = #{userId}
+    </update>
+
+    <select id="getAuthByUserId" parameterType="Long" resultMap="AuthResult">
+        SELECT
+            user_id,
+            refresh_token,
+            login_date,
+            updated_date
+        FROM auth
+        WHERE user_id = #{value}
+    </select>
+</mapper>
