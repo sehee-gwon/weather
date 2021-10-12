@@ -33,7 +33,7 @@ public class AuthService {
         newAuth.setUserId(Long.parseLong(authentication.getName()));
         newAuth.setRefreshToken(auth.getRefreshToken());
 
-        authMapper.insertAuth(newAuth);
+        authMapper.saveAuth(newAuth);
 
         // 5. 토큰 발급
         return auth;
@@ -63,7 +63,7 @@ public class AuthService {
         // 5. 새로운 토큰 생성 후 업데이트
         Auth newAuth = jwtProvider.createToken(authentication);
         newAuth.setUserId(auth.getUserId());
-        authMapper.updateAuth(newAuth);
+        authMapper.saveAuth(newAuth);
 
         // 6. 토큰 발급
         return newAuth;

@@ -23,6 +23,7 @@ public class AuthController {
         try {
             return ResponseEntity.ok(authService.login(user));
         } catch (Exception e) {
+            log.error("[/api/auth/login] error: {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -32,6 +33,7 @@ public class AuthController {
         try {
             return ResponseEntity.ok(authService.reissue(auth));
         } catch (Exception e) {
+            log.error("[/api/auth/reissue] error: {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
