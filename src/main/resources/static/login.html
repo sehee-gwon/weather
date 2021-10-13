@@ -85,6 +85,10 @@
 		<script src="/include/js/init.js"></script>
 
 		<script type="text/javascript">
+			import VueCookies from "vue-cookies"
+			Vue.use(VueCookies);
+			Vue.$cookies.config("7d");
+
 			var vm = new Vue({
 				el: '#weather',
 				components: {
