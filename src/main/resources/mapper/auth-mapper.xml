@@ -13,7 +13,8 @@
 
     <insert id="insertAuth" parameterType="com.weather.auth.domain.Auth">
         INSERT INTO auth (user_id, refresh_token, login_date)
-        VALUES (#{userId}, #{refreshToken}, DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'));
+        VALUES (#{userId}, #{refreshToken}, DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'))
+        ON DUPLICATE KEY UPDATE refresh_token = #{refreshToken}
     </insert>
 
     <update id="updateAuth" parameterType="com.weather.auth.domain.Auth">

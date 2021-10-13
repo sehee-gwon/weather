@@ -27,6 +27,7 @@ public class AuthService {
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         Auth auth = jwtProvider.createToken(authentication);
+        auth.setUserId(Long.parseLong(authentication.getName()));
 
         // 4. RefreshToken 저장
         Auth refreshAuth = new Auth();
