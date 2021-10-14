@@ -28,14 +28,9 @@ public class AuthService {
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         Auth auth = jwtProvider.createToken(authentication);
         auth.setUserId(Long.parseLong(authentication.getName()));
+        authMapper.insertAuth(auth);
 
-        // 4. RefreshToken 저장
-        Auth refreshAuth = new Auth();
-        refreshAuth.setUserId(Long.parseLong(authentication.getName()));
-        refreshAuth.setRefreshToken(auth.getRefreshToken());
-        authMapper.insertAuth(refreshAuth);
-
-        // 5. 토큰 발급
+        // 4. 토큰 발급
         return auth;
     }
 

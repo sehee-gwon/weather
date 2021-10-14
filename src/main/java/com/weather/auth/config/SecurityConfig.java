@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 // /api/board/** 경로만 인증된 유저 허용
-                .antMatchers("/api/board/**").authenticated()
+                .antMatchers("/api/open-weather/**").authenticated()
                 // 그 외 경로는 모든 유저 허용
                 .anyRequest().permitAll()
 

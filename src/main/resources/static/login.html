@@ -83,12 +83,9 @@
 		<script src="/include/js/skel.min.js"></script>
 		<script src="/include/js/skel-layers.min.js"></script>
 		<script src="/include/js/init.js"></script>
+		<script src="https://unpkg.com/vue-cookies@1.7.4/vue-cookies.js"></script> <!-- vue-cookie -->
 
 		<script type="text/javascript">
-			import VueCookies from "vue-cookies"
-			Vue.use(VueCookies);
-			Vue.$cookies.config("7d");
-
 			var vm = new Vue({
 				el: '#weather',
 				components: {
@@ -97,18 +94,33 @@
 				},
 				data: {
 					loginId: "",
-					password: ""
+					password: "",
+					userId: 0,
+					accessToken: "",
+					refreshToken: ""
 				},
 				methods: {
 					login: function () {
 						var params = {
 							loginId: vm.loginId,
-							password: vm.password
+							password: vm.password,
+							userId: vm.userId,
+							accessToken: vm.accessToken,
+							refreshToken: vm.refreshToken
 						}
 						axios.post("/api/auth/login", params)
 							.then(function (response) {
+								vm.userId = response.data.userId;
+								vm.accessToken = response.data.accessToken;
+								vm.refreshToken = response.data.refreshToken;
+								$cookies.set("userId", vm.userId);
+								$cookies.set("accessToken", vm.accessToken);
+								$cookies.set("refreshToken", vm.refreshToken);
+
 								console.log(response);
-								//location.href = "index.html";
+								console.log($cookies.get("userId"));
+								alert("로그인 성공했습니다.");
+								location.href = "index.html";
 							})
 							.catch(function (error) {
 								console.error(error.response);
