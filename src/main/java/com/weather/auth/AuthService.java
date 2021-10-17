@@ -23,17 +23,15 @@ public class AuthService {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getLoginId(), user.getPassword());
 
         // 2. 사용자 비밀번호 체크 (authenticate 메서드가 실행될 때 UserDetailsService 의 loadUserByUsername 메서드가 실행됨)
+        // 인증 전 Authentication 객체를 받아서 인증 완료된 Authentication 객체를 반환
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // 3. 인증 정보를 기반으로 jwt 토큰 생성 (accessToken, refreshToken, expiration)
         Auth auth = jwtProvider.createToken(authentication);
+        auth.setUserId(Long.parseLong(authentication.getName()));
 
         // 4. RefreshToken 정보 저장
-        Auth newAuth = new Auth();
-        newAuth.setUserId(Long.parseLong(authentication.getName()));
-        newAuth.setRefreshToken(auth.getRefreshToken());
-
-        authMapper.saveAuth(newAuth);
+        authMapper.saveAuth(auth);
 
         // 5. 토큰 발급
         return auth;

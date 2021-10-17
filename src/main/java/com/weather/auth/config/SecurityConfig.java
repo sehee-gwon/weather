@@ -40,10 +40,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-                 // /api/board/** 경로는 인증된 사용자의 접근을 허용, 그 외 경로는 모든 사용자의 접근을 허용
+                 // /api/open-weather/** 경로는 인증된 사용자의 접근을 허용, 그 외 경로는 모든 사용자의 접근을 허용
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/board/**").authenticated()
+                .antMatchers("/api/open-weather/**").authenticated()
                 .anyRequest().permitAll()
 
                 // customizing filter 추가

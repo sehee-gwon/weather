@@ -21,9 +21,12 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody User user) {
         try {
+            // 1. AuthenticationFilter -> UsernamePasswordAuthenticationToken -> AuthenticationManager(ProviderManager)
+            // 2. AuthenticationProvider -> UserDetailsService -> UserDetails -> User
+            // 3. 2 -> 1 역순으로 진행, AuthenticationFilter -> SecurityContextHolder -> SecurityContext -> Authentication 에 저장
             return ResponseEntity.ok(authService.login(user));
         } catch (Exception e) {
-            log.error("[/api/auth/login] error: {}", e.getMessage());
+            log.error("[/api/auth/login] error: {}", e.getMessage(), e);
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -33,7 +36,7 @@ public class AuthController {
         try {
             return ResponseEntity.ok(authService.reissue(auth));
         } catch (Exception e) {
-            log.error("[/api/auth/reissue] error: {}", e.getMessage());
+            log.error("[/api/auth/reissue] error: {}", e.getMessage(), e);
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

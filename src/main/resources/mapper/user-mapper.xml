@@ -25,7 +25,12 @@
     </insert>
 
     <select id="getUserByLoginId" parameterType="String" resultMap="UserResult">
-        SELECT *
+        SELECT
+            user_id,
+            user_name,
+            login_id,
+            password,
+            created_date
         FROM user
         WHERE login_id = #{loginId}
     </select>
