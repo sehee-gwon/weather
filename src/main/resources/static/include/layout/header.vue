@@ -36,6 +36,9 @@ module.exports = {
                     location.href = "/";
                 })
                 .catch(function (error) {
+                    $cookies.remove("userId");
+                    $cookies.remove("accessToken");
+                    $cookies.remove("refreshToken");
                     console.error(error.response);
                 });
         }

@@ -1,7 +1,8 @@
 package com.weather.auth.config;
 
-import com.weather.auth.jwt.JwtAccessDeniedHandler;
-import com.weather.auth.jwt.JwtAuthenticationEntryPoint;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.weather.auth.AuthMapper;
+import com.weather.auth.jwt.*;
 import com.weather.common.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -11,13 +12,20 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
 @RequiredArgsConstructor /*의존성 주입(final의 생성자를 생성)*/
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    public static final String AUTHENTICATION_URL = "/api/auth/login";
+
     private final JwtUtil jwtUtil;
+
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+
+    private final ObjectMapper objectMapper;
+    private final AuthMapper authMapper;
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -28,6 +36,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf().disable()
+                .formLogin().disable()
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+
                 .authorizeRequests()
                 // /api/open-weather/** 경로만 인증된 유저 허용
                 .antMatchers("/api/open-weather/**").authenticated()
@@ -44,11 +56,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 여기서는 세션을 사용하지 않기 때문에 세션 설정을 Stateless 로 설정
                 .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
                 // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
-                .and()
-                .apply(new JwtSecurityConfig(jwtUtil));
+                //.and()
+                //.apply(new JwtSecurityConfig(jwtUtil));
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(AUTHENTICATION_URL, objectMapper);
+        jwtAuthenticationFilter.setAuthenticationSuccessHandler(jwtAuthenticationSuccessHandler()); // 로그인 성공시 실행되는 핸들러
+        jwtAuthenticationFilter.setAuthenticationFailureHandler(jwtAuthenticationFailureHandler()); // 로그인 실패시 실행되는 핸들러
+        jwtAuthenticationFilter.setAuthenticationManager(this.authenticationManager());
+        return jwtAuthenticationFilter;
+    }
+
+    @Bean
+    public JwtAuthenticationSuccessHandler jwtAuthenticationSuccessHandler() {
+        return new JwtAuthenticationSuccessHandler(jwtUtil, objectMapper, authMapper);
+    }
+
+    @Bean
+    public JwtAuthenticationFailureHandler jwtAuthenticationFailureHandler() {
+        return new JwtAuthenticationFailureHandler(objectMapper);
     }
 }
 

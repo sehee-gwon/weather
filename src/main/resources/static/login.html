@@ -104,9 +104,7 @@
 						var params = {
 							loginId: vm.loginId,
 							password: vm.password,
-							userId: vm.userId,
-							accessToken: vm.accessToken,
-							refreshToken: vm.refreshToken
+							userId: vm.userId
 						}
 						axios.post("/api/auth/login", params)
 							.then(function (response) {
@@ -118,7 +116,6 @@
 								$cookies.set("refreshToken", vm.refreshToken);
 
 								console.log(response);
-								console.log($cookies.get("userId"));
 								alert("로그인 성공했습니다.");
 								location.href = "index.html";
 							})

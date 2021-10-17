@@ -2,10 +2,7 @@ package com.weather.auth;
 
 import com.weather.auth.domain.Auth;
 import com.weather.common.util.JwtUtil;
-import com.weather.user.domain.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,26 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final AuthMapper authMapper;
     private final JwtUtil jwtUtil;
-
-    @Transactional
-    public Auth login (User user) {
-        // 1. Login ID/PW 를 기반으로 authToken 생성
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user.getLoginId(), user.getPassword());
-
-        // 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authToken);
-
-        // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        Auth auth = jwtUtil.createToken(authentication);
-        auth.setUserId(Long.parseLong(authentication.getName()));
-        authMapper.insertAuth(auth);
-
-        // 4. 토큰 발급
-        return auth;
-    }
 
     @Transactional
     public Auth reissue (Auth requestAuth) {
