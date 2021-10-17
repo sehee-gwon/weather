@@ -22,7 +22,7 @@
 
             <!-- Main -->
             <section id="main" class="wrapper">
-                <div class="login container">
+                <div class="signup container">
                     <section class="box">
                         <header class="major">
                             <h2>Sign Up</h2>
@@ -33,25 +33,25 @@
                                 <label class="signup-title" for="name"><h4>Name: </h4></label>
                                 <div class="12u 12u$">
                                     <input type="text" @blur="validation('userName')" v-model="userName" id="name" placeholder="name" maxlength="20" />
-                                    <span v-if="validator.userNameMessage !== ''">{{validator.userNameMessage}}</span>
+                                    <span class="warning" v-if="validator.message.userName !== ''">{{validator.message.userName}}</span>
                                 </div>
 
                                 <label class="signup-title" for="loginId"><h4>Email: </h4></label>
                                 <div class="12u 12u$">
                                     <input type="email" @blur="validation('loginId')" v-model="loginId" id="loginId" placeholder="Email" maxlength="60" />
-                                    <span v-if="validator.loginIdMessage !== ''">{{validator.loginIdMessage}}</span>
+                                    <span class="warning" v-if="validator.message.loginId !== ''">{{validator.message.loginId}}</span>
                                 </div>
 
                                 <label class="signup-title" for="password"><h4>Password: </h4></label>
                                 <div class="12u 12u$">
                                     <input type="password" @blur="validation('password')" v-model="password" id="password" placeholder="password" maxlength="40" />
-                                    <span v-if="validator.passwordMessage !== ''">{{validator.passwordMessage}}</span>
+                                    <span class="warning" v-if="validator.message.password !== ''">{{validator.message.password}}</span>
                                 </div>
 
                                 <label class="signup-title" for="confirm-password"><h4>Confirm Password: </h4></label>
                                 <div class="12u 12u$">
                                     <input type="password" @blur="validation('confirmPassword')" v-model="confirmPassword" id="confirm-password" placeholder="confirm-password" maxlength="40" />
-                                    <span v-if="validator.confirmPasswordMessage !== ''">{{validator.confirmPasswordMessage}}</span>
+                                    <span class="warning" v-if="validator.message.confirmPassword !== ''">{{validator.message.confirmPassword}}</span>
                                 </div>
 
                                 <div class="margin 12u 12u$">
@@ -89,10 +89,16 @@
                 password: "",
                 confirmPassword: "",
                 validator: {
-                    userNameMessage: "",
-                    loginIdMessage: "",
-                    passwordMessage: "",
-                    confirmPasswordMessage: ""
+                    regExp: {
+                        email: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                        password: /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/
+                    },
+                    message: {
+                        userName: "",
+                        loginId: "",
+                        password: "",
+                        confirmPassword: ""
+                    }
                 }
             },
             methods: {
@@ -100,10 +106,10 @@
                     this.validation("userName, loginId, password, confirmPassword");
 
                     //유효성 검사를 하나라도 통과하지 못하면 회원가입 불가
-                    if (vm.validator.userNameMessage !== ""
-                        || vm.validator.loginIdMessage !== ""
-                        || vm.validator.passwordMessage !== ""
-                        || vm.validator.confirmPasswordMessage !== "") {
+                    if (vm.validator.message.userName !== ""
+                        || vm.validator.message.loginId !== ""
+                        || vm.validator.message.password !== ""
+                        || vm.validator.message.confirmPassword !== "") {
                         return;
                     }
 
@@ -113,6 +119,7 @@
                         password: vm.password,
                         confirmPassword: vm.confirmPassword
                     }
+
                     axios.post("/api/user/signup", params)
                         .then(function (response) {
                             alert("회원가입이 완료되었습니다.");
@@ -128,27 +135,27 @@
 
                         if (type === "userName") {
                             if (vm.userName === "") {
-                                vm.validator.userNameMessage = "필수 정보입니다.";
+                                vm.validator.message.userName = "필수 정보입니다.";
                             } else {
-                                vm.validator.userNameMessage = "";
+                                vm.validator.message.userName = "";
                             }
                         }
                         if (type === "loginId") {
                             if (vm.loginId === "") {
-                                vm.validator.loginIdMessage = "필수 정보입니다.";
-                            } else if (!this.validLoginId(vm.loginId)) {
+                                vm.validator.message.loginId = "필수 정보입니다.";
+                            } else if (!vm.validator.regExp.email.test(vm.loginId)) {
                                 //이메일 정규식
-                                vm.validator.loginIdMessage = "잘못된 이메일 형식입니다.";
+                                vm.validator.message.loginId = "잘못된 이메일 형식입니다.";
                             } else {
                                 var data = new FormData();
                                 data.append("loginId", vm.loginId);
 
                                 axios.post("/api/user/check", data)
                                     .then(function (response) {
-                                        if (response.data === 1) {
-                                            vm.validator.loginIdMessage = "이미 사용중인 아이디입니다.";
+                                        if (response.data !== "") {
+                                            vm.validator.message.loginId = "이미 사용중인 아이디입니다.";
                                         } else {
-                                            vm.validator.loginIdMessage = "";
+                                            vm.validator.message.loginId = "";
                                         }
                                     })
                                     .catch(function (error) {
@@ -158,34 +165,24 @@
                         }
                         if (type === "password") {
                             if (vm.password === "") {
-                                vm.validator.passwordMessage = "필수 정보입니다.";
-                            } else if (!this.validPassword(vm.password)) {
+                                vm.validator.message.password = "필수 정보입니다.";
+                            } else if (!vm.validator.regExp.password.test(vm.password)) {
                                 //비밀번호 정규식
-                                vm.validator.passwordMessage = "6~20자이내 영문, 숫자를 사용해주세요. ";
+                                vm.validator.message.password = "6~20자이내 영문, 숫자를 사용해주세요. ";
                             } else {
-                                vm.validator.passwordMessage = "";
+                                vm.validator.message.password = "";
                             }
                         }
                         if (type === "confirmPassword") {
                             if (vm.confirmPassword === "") {
-                                vm.validator.confirmPasswordMessage = "필수 정보입니다.";
+                                vm.validator.message.confirmPassword = "필수 정보입니다.";
                             } else if (vm.password !== vm.confirmPassword) {
-                                vm.validator.confirmPasswordMessage = "비밀번호가 일치하지 않습니다.";
+                                vm.validator.message.confirmPassword = "비밀번호가 일치하지 않습니다.";
                             } else {
-                                vm.validator.confirmPasswordMessage = "";
+                                vm.validator.message.confirmPassword = "";
                             }
                         }
                     });
-                },
-                validLoginId: function (loginId) {
-                    //이메일 정규식
-                    var validLoginId = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                    return validLoginId.test(loginId);
-                },
-                validPassword: function (password) {
-                    //비밀번호 정규식(6~20자리, 영문+숫자 조합)
-                    var validPassword = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/;
-                    return validPassword.test(password);
                 }
             }
         })

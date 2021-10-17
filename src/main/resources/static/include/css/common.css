@@ -212,7 +212,6 @@ header.major p {
 }
 
 /* Form */
-
 form {
     margin: 0 0 2em 0;
 }
@@ -1195,7 +1194,6 @@ body.landing #header nav a {
 }
 
 /* Grid Demo */
-
 .grid-demo {
     display: block;
     margin: 0 0 2em 0;
@@ -1222,4 +1220,12 @@ body.landing #header nav a {
 
 .grid-demo .row.flush > div:last-child span {
     border-radius: 0 4px 4px 0;
+}
+
+/* 회원가입 */
+.signup.container span.warning {
+    display: block;
+    padding: 0.4em 0 0 0.4em;
+    font-size: 14px;
+    color: #d43c61;
 }
