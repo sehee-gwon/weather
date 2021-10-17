@@ -5,11 +5,11 @@
 
 <mapper namespace="com.weather.user.UserMapper">
     <resultMap id="UserResult" type="com.weather.user.domain.User">
-        <result property="userId" column="user_id"></result>
-        <result property="userName" column="user_name"></result>
-        <result property="loginId" column="login_id"></result>
-        <result property="password" column="password"></result>
-        <result property="createdDate" column="created_date"></result>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="loginId" column="login_id"/>
+        <result property="password" column="password"/>
+        <result property="createdDate" column="created_date"/>
     </resultMap>
 
     <insert id="insertUser" parameterType="com.weather.user.domain.User">

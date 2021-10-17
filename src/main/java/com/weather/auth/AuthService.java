@@ -65,4 +65,8 @@ public class AuthService {
         // 7. 토큰 발급
         return auth;
     }
+
+    public void deleteAuthByUserId(long userId) {
+        authMapper.deleteAuthByUserId(userId);
+    }
 }

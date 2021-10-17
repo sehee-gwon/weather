@@ -29,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .csrf().disable()
                 .authorizeRequests()
-                // /api/board/** 경로만 인증된 유저 허용
+                // /api/open-weather/** 경로만 인증된 유저 허용
                 .antMatchers("/api/open-weather/**").authenticated()
                 // 그 외 경로는 모든 유저 허용
                 .anyRequest().permitAll()

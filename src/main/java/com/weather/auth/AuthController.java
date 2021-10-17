@@ -19,7 +19,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody User user) {
+    public ResponseEntity<?> login(@RequestBody User user) {
         try {
             return ResponseEntity.ok(authService.login(user));
         } catch (Exception e) {
@@ -28,9 +28,19 @@ public class AuthController {
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity reissue(@RequestBody Auth auth) {
+    public ResponseEntity<?> reissue(@RequestBody Auth auth) {
         try {
             return ResponseEntity.ok(authService.reissue(auth));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> deleteAuthByUserId(@RequestBody Auth auth) {
+        try {
+            authService.deleteAuthByUserId(auth.getUserId());
+            return ResponseEntity.ok("success");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

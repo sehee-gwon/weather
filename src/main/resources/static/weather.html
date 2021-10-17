@@ -235,7 +235,11 @@
 				},
 				methods: {
 					getCityType: function() {
-						axios.get('/api/open-weather/cityType', {})
+						axios.get('/api/open-weather/cityType', {
+							headers: {
+								Authorization: 'Bearer ' + $cookies.get("accessToken")
+							}
+						})
 								.then(function (response) {
 									vm.cityType = response.data;
 								})
@@ -259,6 +263,9 @@
 						vm.city.lon = e.target.options[e.target.selectedIndex].dataset.lon;
 
 						axios.get('/api/open-weather/data', {
+							headers: {
+								Authorization: 'Bearer ' + $cookies.get("accessToken")
+							},
 							params: {
 								code: vm.city.code,
 								lat: vm.city.lat,

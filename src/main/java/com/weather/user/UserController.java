@@ -21,7 +21,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity signup(@RequestBody @Validated User user, BindingResult bindingResult) {
+    public ResponseEntity<?> signup(@RequestBody @Validated User user, BindingResult bindingResult) {
         try {
             if (bindingResult.hasErrors()) {
                 throw new Exception("잘못된 접근입니다.");
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @PostMapping("/check")
-    public ResponseEntity check(@RequestParam String loginId) {
+    public ResponseEntity<?> check(@RequestParam String loginId) {
         return ResponseEntity.ok(userService.getUserByLoginId(loginId));
     }
 }

@@ -25,7 +25,7 @@ public class OpenWeatherApiController {
     private static final String apiKey = "ef793455d9c2b630991a32d738d2fbb7";
 
     @GetMapping("/cityType")
-    public ResponseEntity CityType() {
+    public ResponseEntity<?> CityType() {
         List<Map<String, Object>> list = new ArrayList<>();
         for (CityType cityType : CityType.values()) {
             Map<String, Object> map = new LinkedHashMap<>();
@@ -42,7 +42,7 @@ public class OpenWeatherApiController {
     }
 
     @GetMapping("/data")
-    public ResponseEntity data(City city) {
+    public ResponseEntity<?> data(City city) {
         StringBuilder urlBuilder = new StringBuilder(baseUrl);
 
         try {
