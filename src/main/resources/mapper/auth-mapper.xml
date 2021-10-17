@@ -19,7 +19,8 @@
 
     <update id="updateAuth" parameterType="com.weather.auth.domain.Auth">
         UPDATE auth
-        SET refresh_token = #{refreshToken}
+        SET refresh_token = #{refreshToken},
+            updated_date = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
         WHERE user_id = #{userId}
     </update>
 

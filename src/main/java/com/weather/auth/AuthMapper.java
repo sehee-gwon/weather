@@ -16,7 +16,7 @@ public interface AuthMapper {
      * @param auth
      * @return
      */
-    Auth updateAuth(Auth auth);
+    void updateAuth(Auth auth);
 
     /**
      * 토큰 인증 정보 조회

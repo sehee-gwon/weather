@@ -12,6 +12,8 @@ public class Auth {
     private String accessToken;
     private String refreshToken;
     private long expiration;
+    private String createdDate;
+    private String updatedDate;
 
     public Auth (String accessToken, String refreshToken, long expiration) {
         this.accessToken = accessToken;

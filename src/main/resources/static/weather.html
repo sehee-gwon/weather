@@ -235,17 +235,40 @@
 				},
 				methods: {
 					getCityType: function() {
+						var now = (new Date()).getTime();
+						if (now >= $cookies.get("expiration")) {
+							axios.post('/api/auth/reissue', {
+								userId: $cookies.get("userId"),
+								accessToken: $cookies.get("accessToken"),
+								refreshToken: $cookies.get("refreshToken"),
+								expiration: $cookies.get("expiration")
+							})
+							.then(function (response) {
+								var userId = response.data.userId;
+								var accessToken = response.data.accessToken;
+								var refreshToken = response.data.refreshToken;
+								var expiration = response.data.expiration;
+								$cookies.set("userId", userId);
+								$cookies.set("accessToken", accessToken);
+								$cookies.set("refreshToken", refreshToken);
+								$cookies.set("expiration", expiration);
+							})
+							.catch(function (error) {
+								console.error(error.response);
+							});
+						}
+
 						axios.get('/api/open-weather/cityType', {
 							headers: {
 								Authorization: 'Bearer ' + $cookies.get("accessToken")
 							}
 						})
-								.then(function (response) {
-									vm.cityType = response.data;
-								})
-								.catch(function (error) {
-									console.error(error.response);
-								});
+						.then(function (response) {
+							vm.cityType = response.data;
+						})
+						.catch(function (error) {
+							console.error(error.response);
+						});
 					},
 					getWeather: function(e) {
 						if (e.target.value == "") {

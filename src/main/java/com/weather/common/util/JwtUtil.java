@@ -25,12 +25,9 @@ import java.util.stream.Collectors;
 @Component
 public class JwtUtil {
 
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String BEARER_PREFIX = "Bearer ";
-
-    public static final String AUTHORITIES_KEY = "auth";
-    public static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            // 30min
-    public static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7days
+    private static final String AUTHORITIES_KEY = "auth";
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            // 30min
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7days
 
     private final Key key;
 
