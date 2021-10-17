@@ -24,4 +24,10 @@ public interface AuthMapper {
      * @return
      */
     Auth getAuthByUserId(long userId);
+
+    /**
+     * Refresh Token 제거 
+     * @param userId
+     */
+    void deleteAuthByUserId(long userId);
 }
