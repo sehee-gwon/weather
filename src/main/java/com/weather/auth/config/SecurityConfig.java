@@ -2,7 +2,7 @@ package com.weather.auth.config;
 
 import com.weather.auth.jwt.JwtAccessDeniedHandler;
 import com.weather.auth.jwt.JwtAuthenticationEntryPoint;
-import com.weather.auth.jwt.JwtProvider;
+import com.weather.common.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @RequiredArgsConstructor /*의존성 주입(final의 생성자를 생성)*/
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final JwtProvider jwtProvider;
+    private final JwtUtil jwtUtil;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
                 .and()
-                .apply(new JwtSecurityConfig(jwtProvider));
+                .apply(new JwtSecurityConfig(jwtUtil));
     }
 }
 

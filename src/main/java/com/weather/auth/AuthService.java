@@ -1,7 +1,7 @@
 package com.weather.auth;
 
 import com.weather.auth.domain.Auth;
-import com.weather.auth.jwt.JwtProvider;
+import com.weather.common.util.JwtUtil;
 import com.weather.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final AuthMapper authMapper;
-    private final JwtProvider jwtProvider;
+    private final JwtUtil jwtUtil;
 
     @Transactional
     public Auth login (User user) {
@@ -26,7 +26,7 @@ public class AuthService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authToken);
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        Auth auth = jwtProvider.createToken(authentication);
+        Auth auth = jwtUtil.createToken(authentication);
         auth.setUserId(Long.parseLong(authentication.getName()));
         authMapper.insertAuth(auth);
 
@@ -37,12 +37,12 @@ public class AuthService {
     @Transactional
     public Auth reissue (Auth requestAuth) {
         // 1. Refresh Token 검증
-        if (!jwtProvider.validateToken(requestAuth.getRefreshToken())) {
+        if (!jwtUtil.validateToken(requestAuth.getRefreshToken())) {
             throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
         }
 
         // 2. Access Token 에서 User ID 가져오기
-        Authentication authentication = jwtProvider.getAuthentication(requestAuth.getAccessToken());
+        Authentication authentication = jwtUtil.getAuthentication(requestAuth.getAccessToken());
 
         // 3. 저장소에서 User ID 를 기반으로 Refresh Token 값 가져오기
         Auth refreshAuth = authMapper.getAuthByUserId(Long.parseLong(authentication.getName()));
@@ -56,7 +56,7 @@ public class AuthService {
         }
 
         // 5. 새로운 토큰 생성
-        Auth auth = jwtProvider.createToken(authentication);
+        Auth auth = jwtUtil.createToken(authentication);
 
         // 6. 저장소 정보 업데이트
         auth.setUserId(refreshAuth.getUserId());

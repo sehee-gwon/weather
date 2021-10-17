@@ -1,6 +1,5 @@
-package com.weather.auth.jwt;
+package com.weather.common.util;
 
-import com.mysql.cj.util.DnsSrv;
 import com.weather.auth.domain.Auth;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -11,11 +10,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import javax.xml.crypto.Data;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,7 +23,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class JwtProvider {
+public class JwtUtil {
 
     private static final String AUTHORITIES_KEY = "auth";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            // 30min
@@ -32,12 +31,12 @@ public class JwtProvider {
 
     private final Key key;
 
-    public JwtProvider (@Value("${jwt.secret}") String secretKey) {
+    public JwtUtil(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public Auth createToken (Authentication authentication) {
+    public Auth createToken(Authentication authentication) {
         // 권한 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -63,7 +62,7 @@ public class JwtProvider {
         return new Auth(accessToken, refreshToken, accessTokenExpiresIn.getTime());
     }
 
-    public Authentication getAuthentication (String accessToken) {
+    public Authentication getAuthentication(String accessToken) {
         // Token Decryption
         Claims claims = parseClaims(accessToken);
 
@@ -83,7 +82,7 @@ public class JwtProvider {
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
-    public boolean validateToken (String token) {
+    public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
@@ -99,12 +98,24 @@ public class JwtProvider {
         return false;
     }
 
-    private Claims parseClaims (String accessToken) {
+    private Claims parseClaims(String accessToken) {
         try {
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
+    }
+
+    // SecurityContext 에 유저 정보가 저장되는 시점
+    // Request 가 들어올 때 JwtFilter 의 doFilter 에서 저장
+    public static Long getUserId() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || authentication.getName() == null) {
+            throw new RuntimeException("Security Context 에 인증 정보가 없습니다.");
+        }
+
+        return Long.parseLong(authentication.getName());
     }
 }
 

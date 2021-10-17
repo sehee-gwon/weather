@@ -21,7 +21,7 @@ import java.util.Map;
 @RequestMapping("/api/open-weather")
 public class OpenWeatherApiController {
 
-    private static final String baseUrl = "http://api.openweathermap.org/data/2.5/onecall";
+    private static final String baseUrl = "https://api.openweathermap.org/data/2.5/onecall";
     private static final String apiKey = "ef793455d9c2b630991a32d738d2fbb7";
 
     @GetMapping("/cityType")
@@ -46,17 +46,13 @@ public class OpenWeatherApiController {
         StringBuilder urlBuilder = new StringBuilder(baseUrl);
 
         try {
-            /*if (!StringUtils.isEmpty(city.getCode())) {
-                urlBuilder.append("?" + URLEncoder.encode("q", "UTF-8") + "=" + city.getCode());
-            }*/
-            urlBuilder.append("?" + URLEncoder.encode("lat", "UTF-8") + "=" + city.getLat());
-            urlBuilder.append("&" + URLEncoder.encode("lon", "UTF-8") + "=" + city.getLon());
+            urlBuilder.append("?").append(URLEncoder.encode("lat", "UTF-8")).append("=").append(city.getLat());
+            urlBuilder.append("&").append(URLEncoder.encode("lon", "UTF-8")).append("=").append(city.getLon());
 
-
-            urlBuilder.append("&" + URLEncoder.encode("exclude", "UTF-8") + "=minutely,hourly,alerts");
-            urlBuilder.append("&" + URLEncoder.encode("appid", "UTF-8") + "=" + apiKey);
-            urlBuilder.append("&" + URLEncoder.encode("lang", "UTF-8") + "=kr");
-            urlBuilder.append("&" + URLEncoder.encode("units", "UTF-8") + "=metric");
+            urlBuilder.append("&").append(URLEncoder.encode("exclude", "UTF-8")).append("=minutely,hourly,alerts");
+            urlBuilder.append("&").append(URLEncoder.encode("appid", "UTF-8")).append("=").append(apiKey);
+            urlBuilder.append("&").append(URLEncoder.encode("lang", "UTF-8")).append("=kr");
+            urlBuilder.append("&").append(URLEncoder.encode("units", "UTF-8")).append("=metric");
 
             RestTemplate restTemplate = new RestTemplate();
             OpenWeatherApi response = restTemplate.getForObject(urlBuilder.toString(), OpenWeatherApi.class);
