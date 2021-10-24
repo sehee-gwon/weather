@@ -68,6 +68,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public LogoutFilter LogoutFilter() {
+        LogoutFilter logoutFilter = new LogoutFilter(new JwtLogoutHandler(authService), new SecurityContextLogoutHandler());
+        logoutFilter.setFilterProcessesUrl(AUTHENTICATION_LOGOUT_URL);
+        return logoutFilter;
+    }
+
+    @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(AUTHENTICATION_LOGIN_URL, objectMapper);
         jwtAuthenticationFilter.setAuthenticationSuccessHandler(jwtAuthenticationSuccessHandler()); // 로그인 성공시 실행되는 핸들러
@@ -89,13 +96,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public JwtAuthenticationFailureHandler jwtAuthenticationFailureHandler() {
         return new JwtAuthenticationFailureHandler(objectMapper);
-    }
-
-    @Bean
-    public LogoutFilter LogoutFilter() {
-        LogoutFilter logoutFilter = new LogoutFilter(new JwtLogoutHandler(authService), new SecurityContextLogoutHandler());
-        logoutFilter.setFilterProcessesUrl(AUTHENTICATION_LOGOUT_URL);
-        return logoutFilter;
     }
 }
 

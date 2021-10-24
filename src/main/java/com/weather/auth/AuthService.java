@@ -72,11 +72,9 @@ public class AuthService {
         CookieUtil.deleteTokenCookie(request, response);
 
         try {
-            if (CookieUtil.getCookie(request,"userId") == null) {
-                throw new Exception("userId 쿠키가 없습니다.");
+            if (CookieUtil.getCookie(request,"userId") != null) {
+                authMapper.deleteAuthByUserId(Long.parseLong(CookieUtil.getCookieValue(request,"userId")));
             }
-
-            authMapper.deleteAuthByUserId(Long.parseLong(CookieUtil.getCookieValue(request,"userId")));
         } catch (Exception e) {
             log.error("[/logout] deleteAuthByUserId 토큰 데이터 삭제 Error: {}", e.getMessage(), e);
         }

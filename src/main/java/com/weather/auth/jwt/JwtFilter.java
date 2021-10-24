@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -22,6 +23,17 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
     private final AuthService authService;
 
+    public boolean isApiUrl(HttpServletRequest request) {
+        AntPathMatcher antPathMatcher = new AntPathMatcher();
+        String uri = request.getRequestURI();
+
+        if (antPathMatcher.match("/api/**", uri)) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * 필터링 로직, 토큰 인증 정보를 SecurityContext 에 저장
      * @param request
@@ -31,39 +43,45 @@ public class JwtFilter extends OncePerRequestFilter {
      * @throws ServletException
      */
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws IOException, ServletException {
-        // 1. Cookie 에서 액세스 토큰을 꺼냄
-        String accessToken = CookieUtil.getCookieValue(request, "accessToken");
-        String refreshToken = CookieUtil.getCookieValue(request, "refreshToken");
-        //String userId = CookieUtil.getCookieValue(request, "userId");
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+        if (isApiUrl(request)) {
+            // 1. Cookie 에서 액세스 토큰을 꺼냄
+            String accessToken = CookieUtil.getCookieValue(request, "accessToken");
+            String refreshToken = CookieUtil.getCookieValue(request, "refreshToken");
+            String userId = CookieUtil.getCookieValue(request, "userId");
 
-        // 2. 액세스 토큰이 있는지 확인
-        if (StringUtils.hasText(accessToken)) {
-            try {
-                // 2-1. 액세스 토큰 유효성 검사 (정상: true, 만료: false, 기타: exception error)
-                if (JwtUtil.validateToken(accessToken)) { // 정상
-                    Authentication authentication = JwtUtil.getAuthentication(accessToken);
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                } else { // 만료
-                    // 2-2. 액세스, 리프레쉬 토큰 재발급 (refresh token 으로 재발급)
-                    Auth auth = new Auth();
-                    auth.setAccessToken(accessToken);
-                    auth.setRefreshToken(refreshToken);
+            // 2. 액세스 토큰이 있는지 확인
+            if (StringUtils.hasText(accessToken)) {
+                try {
+                    // 2-1. 액세스 토큰 유효성 검사 (정상: true, 만료: false, 기타: exception error)
+                    if (JwtUtil.validateToken(accessToken)) { // 정상
+                        Authentication authentication = JwtUtil.getAuthentication(accessToken);
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                    auth = authService.reissueAuth(auth, response);
+                        if (!StringUtils.hasText(userId)) {
+                            CookieUtil.createCookie("userId", String.valueOf(authentication.getName()), JwtUtil.REFRESH_TOKEN_COOKIE_EXPIRE_TIME, false, response);
+                        }
+                    } else { // 만료
+                        // 2-2. 액세스, 리프레쉬 토큰 재발급 (refresh token 으로 재발급)
+                        Auth auth = new Auth();
+                        auth.setAccessToken(accessToken);
+                        auth.setRefreshToken(refreshToken);
 
-                    Authentication authentication = JwtUtil.getAuthentication(auth.getAccessToken());
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                        auth = authService.reissueAuth(auth, response);
+
+                        Authentication authentication = JwtUtil.getAuthentication(auth.getAccessToken());
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
+                } catch (Exception e) { // Jwt parserBuilder, 재발급 중 exception
+                    // 토큰 만료 처리 (로그아웃)
+                    authService.deleteAuth(request, response);
+                    SecurityContextHolder.clearContext();
+                    log.error("JwtFilter doFilterInternal Error: {}", e.getMessage(), e);
                 }
-            } catch (Exception e) { // 기타 jwt token exception
-                // 토큰 만료 처리
+            } else {
                 authService.deleteAuth(request, response);
                 SecurityContextHolder.clearContext();
-                log.error("JwtFilter doFilterInternal Error: {}", e.getMessage(), e);
             }
-        } else {
-            CookieUtil.deleteCookie(request, response);
         }
 
         filterChain.doFilter(request, response);
