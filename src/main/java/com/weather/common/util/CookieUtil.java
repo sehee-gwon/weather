@@ -44,6 +44,14 @@ public class CookieUtil {
         return null;
     }
 
+    public static String getCookieValue(HttpServletRequest request, String name) {
+        Cookie cookie = getCookie(request, name);
+        if (cookie != null) {
+            return cookie.getValue();
+        }
+        return null;
+    }
+
     public static void deleteTokenCookie(HttpServletRequest request, HttpServletResponse response) {
         List<String> tokens = Arrays.asList("accessToken", "refreshToken", "userId");
         Cookie[] cookies = request.getCookies();

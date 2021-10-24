@@ -104,14 +104,14 @@
 							password: vm.password
 						}
 						axios.post("/login", params)
-							.then(function(response) {
-								console.log(response);
-								alert("로그인 성공했습니다.");
-								location.href = "/";
-							})
-							.catch(function(error) {
-								this.handlerException(error.response);
-							});
+						.then(function(response) {
+							console.log(response);
+							alert("로그인 성공하였습니다.");
+							location.href = "/";
+						})
+						.catch(function(error) {
+							alert("Email 또는 Password가 일치하지 않습니다.");
+						});
 					}
 				}
 			})

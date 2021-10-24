@@ -76,7 +76,7 @@ public class AuthService {
                 throw new Exception("userId 쿠키가 없습니다.");
             }
 
-            authMapper.deleteAuthByUserId(Long.parseLong(CookieUtil.getCookie(request,"userId").getValue()));
+            authMapper.deleteAuthByUserId(Long.parseLong(CookieUtil.getCookieValue(request,"userId")));
         } catch (Exception e) {
             log.error("[/logout] deleteAuthByUserId 토큰 데이터 삭제 Error: {}", e.getMessage(), e);
         }
