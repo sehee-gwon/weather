@@ -11,18 +11,11 @@
         <result property="updatedDate" column="updated_date"/>
     </resultMap>
 
-    <insert id="insertAuth" parameterType="com.weather.auth.domain.Auth">
+    <insert id="saveAuth" parameterType="com.weather.auth.domain.Auth">
         INSERT INTO auth (user_id, refresh_token, created_date)
         VALUES (#{userId}, #{refreshToken}, DATE_FORMAT(NOW(), '%Y%m%d%H%i%s'))
-        ON DUPLICATE KEY UPDATE refresh_token = #{refreshToken}
+        ON DUPLICATE KEY UPDATE refresh_token = #{refreshToken}, updated_date = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
     </insert>
-
-    <update id="updateAuth" parameterType="com.weather.auth.domain.Auth">
-        UPDATE auth
-        SET refresh_token = #{refreshToken},
-            updated_date = DATE_FORMAT(NOW(), '%Y%m%d%H%i%s')
-        WHERE user_id = #{userId}
-    </update>
 
     <select id="getAuthByUserId" parameterType="Long" resultMap="AuthResult">
         SELECT

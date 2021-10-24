@@ -83,6 +83,7 @@
 		<script src="/include/js/skel.min.js"></script>
 		<script src="/include/js/skel-layers.min.js"></script>
 		<script src="/include/js/init.js"></script>
+        <script src="/include/js/common.js"></script>
 		<script src="https://unpkg.com/vue-cookies@1.7.4/vue-cookies.js"></script> <!-- vue-cookie -->
 
 		<script type="text/javascript">
@@ -94,34 +95,22 @@
 				},
 				data: {
 					loginId: "",
-					password: "",
-					userId: 0,
-					accessToken: "",
-					refreshToken: ""
+					password: ""
 				},
 				methods: {
-					login: function () {
+					login: function() {
 						var params = {
 							loginId: vm.loginId,
-							password: vm.password,
-							userId: vm.userId
+							password: vm.password
 						}
-						axios.post("/api/auth/login", params)
-							.then(function (response) {
-								vm.userId = response.data.userId;
-								vm.accessToken = response.data.accessToken;
-								vm.refreshToken = response.data.refreshToken;
-								$cookies.set("userId", vm.userId);
-								$cookies.set("accessToken", vm.accessToken);
-								$cookies.set("refreshToken", vm.refreshToken);
-
+						axios.post("/login", params)
+							.then(function(response) {
 								console.log(response);
-								console.log($cookies.get("userId"));
 								alert("로그인 성공했습니다.");
-								location.href = "index.html";
+								location.href = "/";
 							})
-							.catch(function (error) {
-								console.error(error.response);
+							.catch(function(error) {
+								this.handlerException(error.response);
 							});
 					}
 				}

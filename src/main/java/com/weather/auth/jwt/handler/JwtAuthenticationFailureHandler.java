@@ -1,4 +1,4 @@
-package com.weather.auth.jwt;
+package com.weather.auth.jwt.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

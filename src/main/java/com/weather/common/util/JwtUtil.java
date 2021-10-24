@@ -6,6 +6,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +16,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,17 +31,19 @@ public class JwtUtil {
     public static final String BEARER_PREFIX = "Bearer ";
 
     private static final String AUTHORITIES_KEY = "auth";
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            // 30min
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7days
+    public static final int ACCESS_TOKEN_COOKIE_EXPIRE_TIME = 60 * 60 * 24;
+    public static final int REFRESH_TOKEN_COOKIE_EXPIRE_TIME = 60 * 60 * 24 * 7;
+    public static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 10 ;            // 30min
+    public static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7days
 
-    private final Key key;
+    public static Key key = null;
 
     public JwtUtil(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        this.key = Keys.hmacShaKeyFor(keyBytes);
+        key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public Auth createToken(Authentication authentication) {
+    public static Auth createToken(Authentication authentication, HttpServletResponse response) {
         // 권한 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -50,7 +55,7 @@ public class JwtUtil {
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY ,authorities)
+                .claim(AUTHORITIES_KEY, authorities)
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -61,10 +66,15 @@ public class JwtUtil {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
+        // 쿠키 생성
+        CookieUtil.createCookie("accessToken", accessToken, ACCESS_TOKEN_COOKIE_EXPIRE_TIME, true, response);
+        CookieUtil.createCookie("refreshToken", refreshToken, REFRESH_TOKEN_COOKIE_EXPIRE_TIME, true, response);
+        CookieUtil.createCookie("userId", String.valueOf(authentication.getName()), REFRESH_TOKEN_COOKIE_EXPIRE_TIME, false, response);
+
         return new Auth(accessToken, refreshToken, accessTokenExpiresIn.getTime());
     }
 
-    public Authentication getAuthentication(String accessToken) {
+    public static Authentication getAuthentication(String accessToken) {
         // Token Decryption
         Claims claims = parseClaims(accessToken);
 
@@ -84,23 +94,26 @@ public class JwtUtil {
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
-    public boolean validateToken(String token) {
+    public static boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
+            throw e;
         } catch (ExpiredJwtException e) {
             log.info("만료된 JWT 토큰입니다.");
+            throw e;
         } catch (UnsupportedJwtException e) {
             log.info("지원되지 않는 JWT 토큰입니다.");
+            throw e;
         } catch (IllegalArgumentException e) {
             log.info("JWT 토큰이 잘못되었습니다.");
+            throw e;
         }
-        return false;
     }
 
-    private Claims parseClaims(String accessToken) {
+    public static Claims parseClaims(String accessToken) {
         try {
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {

@@ -1,9 +1,10 @@
 package com.weather.auth.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.weather.auth.AuthMapper;
-import com.weather.auth.jwt.*;
-import com.weather.common.util.JwtUtil;
+import com.weather.auth.AuthService;
+import com.weather.auth.jwt.JwtAuthenticationFilter;
+import com.weather.auth.jwt.JwtFilter;
+import com.weather.auth.jwt.handler.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,19 +14,20 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
 @EnableWebSecurity
 @RequiredArgsConstructor /*의존성 주입(final의 생성자를 생성)*/
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    public static final String AUTHENTICATION_URL = "/api/auth/login";
-
-    private final JwtUtil jwtUtil;
+    public static final String AUTHENTICATION_LOGIN_URL = "/login";
+    public static final String AUTHENTICATION_LOGOUT_URL = "/logout";
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     private final ObjectMapper objectMapper;
-    private final AuthMapper authMapper;
+    private final AuthService authService;
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -37,12 +39,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .csrf().disable()
                 .formLogin().disable()
+                .addFilterAt(LogoutFilter(), LogoutFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(authService), UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeRequests()
                 // /api/open-weather/** 경로만 인증된 유저 허용
                 .antMatchers("/api/open-weather/**").authenticated()
+                .antMatchers("/api/auth/**").authenticated()
                 // 그 외 경로는 모든 유저 허용
                 .anyRequest().permitAll()
 
@@ -65,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(AUTHENTICATION_URL, objectMapper);
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(AUTHENTICATION_LOGIN_URL, objectMapper);
         jwtAuthenticationFilter.setAuthenticationSuccessHandler(jwtAuthenticationSuccessHandler()); // 로그인 성공시 실행되는 핸들러
         jwtAuthenticationFilter.setAuthenticationFailureHandler(jwtAuthenticationFailureHandler()); // 로그인 실패시 실행되는 핸들러
         jwtAuthenticationFilter.setAuthenticationManager(this.authenticationManager());
@@ -74,12 +78,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JwtAuthenticationSuccessHandler jwtAuthenticationSuccessHandler() {
-        return new JwtAuthenticationSuccessHandler(jwtUtil, objectMapper, authMapper);
+        return new JwtAuthenticationSuccessHandler(objectMapper, authService);
     }
 
     @Bean
     public JwtAuthenticationFailureHandler jwtAuthenticationFailureHandler() {
         return new JwtAuthenticationFailureHandler(objectMapper);
+    }
+
+    @Bean
+    public LogoutFilter LogoutFilter() {
+        LogoutFilter logoutFilter = new LogoutFilter(new JwtLogoutHandler(authService), new SecurityContextLogoutHandler());
+        logoutFilter.setFilterProcessesUrl(AUTHENTICATION_LOGOUT_URL);
+        return logoutFilter;
     }
 }
 

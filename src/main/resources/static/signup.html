@@ -74,6 +74,7 @@
         <script src="/include/js/skel.min.js"></script>
         <script src="/include/js/skel-layers.min.js"></script>
         <script src="/include/js/init.js"></script>
+        <script src="/include/js/common.js"></script>
         <script src="https://unpkg.com/vue-cookies@1.7.4/vue-cookies.js"></script> <!-- vue-cookie -->
 
         <script type="text/javascript">
@@ -102,7 +103,7 @@
                 }
             },
             methods: {
-                signup: function () {
+                signup: function() {
                     this.validation("userName, loginId, password, confirmPassword");
 
                     //유효성 검사를 하나라도 통과하지 못하면 회원가입 불가
@@ -121,15 +122,15 @@
                     }
 
                     axios.post("/api/user/signup", params)
-                        .then(function (response) {
-                            alert("회원가입이 완료되었습니다.");
-                            location.href = "login.html";
-                        })
-                        .catch(function (error) {
-                            console.error(error.response);
-                        });
+                    .then(function(response) {
+                        alert("회원가입이 완료되었습니다.");
+                        location.href = "login.html";
+                    })
+                    .catch(function(error) {
+                        this.handlerException(error.response);
+                    });
                 },
-                validation: function (types) {
+                validation: function(types) {
                     types.split(",").forEach(type => {
                         type = type.trim();
 
@@ -151,16 +152,16 @@
                                 data.append("loginId", vm.loginId);
 
                                 axios.post("/api/user/check", data)
-                                    .then(function (response) {
-                                        if (response.data !== "") {
-                                            vm.validator.message.loginId = "이미 사용중인 아이디입니다.";
-                                        } else {
-                                            vm.validator.message.loginId = "";
-                                        }
-                                    })
-                                    .catch(function (error) {
-                                        console.error(error.response);
-                                    })
+                                .then(function (response) {
+                                    if (response.data !== "") {
+                                        vm.validator.message.loginId = "이미 사용중인 아이디입니다.";
+                                    } else {
+                                        vm.validator.message.loginId = "";
+                                    }
+                                })
+                                .catch(function(error) {
+                                    this.handlerException(error.response);
+                                });
                             }
                         }
                         if (type === "password") {

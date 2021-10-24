@@ -22,25 +22,22 @@
 module.exports = {
     data: function() {
         return {
-            cookie: $cookies.get("accessToken"),
-            userId: $cookies.get("userId")
+            cookie: $cookies.get("userId")
         }
     },
     methods: {
-        logout: function () {
-            axios.post("/api/auth/logout", {userId: this.userId})
-                .then(function (response) {
-                    $cookies.remove("userId");
-                    $cookies.remove("accessToken");
-                    $cookies.remove("refreshToken");
-                    location.href = "/";
-                })
-                .catch(function (error) {
-                    $cookies.remove("userId");
-                    $cookies.remove("accessToken");
-                    $cookies.remove("refreshToken");
-                    console.error(error.response);
-                });
+        logout: function() {
+            axios.get("/logout", {
+                headers: {
+                    Authorization: 'Bearer ' + this.cookie
+                }
+            })
+            .then(function(response) {
+                location.href = "/";
+            })
+            .catch(function(error) {
+                this.handlerException(error.response);
+            });
         }
     }
 }
