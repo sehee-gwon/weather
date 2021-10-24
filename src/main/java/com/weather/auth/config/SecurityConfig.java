@@ -41,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .addFilterAt(LogoutFilter(), LogoutFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtFilter(authService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeRequests()
                 // /api/open-weather/** 경로만 인증된 유저 허용
@@ -74,6 +74,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         jwtAuthenticationFilter.setAuthenticationFailureHandler(jwtAuthenticationFailureHandler()); // 로그인 실패시 실행되는 핸들러
         jwtAuthenticationFilter.setAuthenticationManager(this.authenticationManager());
         return jwtAuthenticationFilter;
+    }
+
+    @Bean
+    public JwtFilter jwtFilter() {
+        return new JwtFilter(authService);
     }
 
     @Bean

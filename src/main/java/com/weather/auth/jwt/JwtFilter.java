@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -19,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
     private final AuthService authService;
@@ -33,11 +31,12 @@ public class JwtFilter extends OncePerRequestFilter {
      * @throws ServletException
      */
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain filterChain) throws IOException, ServletException {
         // 1. Cookie 에서 액세스 토큰을 꺼냄
         String accessToken = CookieUtil.getCookieValue(request, "accessToken");
         String refreshToken = CookieUtil.getCookieValue(request, "refreshToken");
-        String userId = CookieUtil.getCookieValue(request, "userId");
+        //String userId = CookieUtil.getCookieValue(request, "userId");
 
         // 2. 액세스 토큰이 있는지 확인
         if (StringUtils.hasText(accessToken)) {
