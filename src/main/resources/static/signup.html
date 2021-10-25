@@ -185,6 +185,13 @@
                         }
                     });
                 }
+            },
+            mounted() {
+                var cookie = "";
+                cookie = $cookies.get("userId");
+                if (cookie != null) {
+                    location.href = "/";
+                }
             }
         })
         </script>

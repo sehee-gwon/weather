@@ -113,6 +113,13 @@
 							alert("Email 또는 Password가 일치하지 않습니다.");
 						});
 					}
+				},
+				mounted() {
+					var cookie = "";
+					cookie = $cookies.get("userId");
+					if (cookie != null) {
+						location.href = "/";
+					}
 				}
 			})
 		</script>

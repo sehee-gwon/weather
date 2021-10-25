@@ -33,7 +33,7 @@ public class JwtUtil {
     private static final String AUTHORITIES_KEY = "auth";
     public static final int ACCESS_TOKEN_COOKIE_EXPIRE_TIME = 60 * 60 * 24;
     public static final int REFRESH_TOKEN_COOKIE_EXPIRE_TIME = 60 * 60 * 24 * 7;
-    public static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            // 30min
+    public static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 10;            // 30min
     public static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7days
 
     public static Key key = null;
