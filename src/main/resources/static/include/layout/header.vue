@@ -5,8 +5,8 @@
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/weather.html">Weather</a></li>
-        <!--        <li><a href="/board/list.html">Board</a></li>-->
-                <li><a href="/elements.html">element</a></li>
+<!--                <li><a href="/board/list.html">Board</a></li>-->
+<!--                <li><a href="/elements.html">element</a></li>-->
                 <li v-if="cookie == null">
                     <a href="/login.html" class="button special">Login</a>
                 </li>
