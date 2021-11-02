@@ -1,13 +1,13 @@
 # Weather Forecast Project
 
 
-## 프로젝트 소개
+## 소개
 - 이 프로젝트는 대한민국의 기상 예보를 보여주는 서비스 입니다.
 - 원하는 지역을 선택하면 그 지역의 날씨 정보를 나타내줍니다.
 - 이 서비스는 회원가입 및 로그인을 진행한 사용자에게 제공됩니다.
 
 
-## 개발환경
+## 개발 환경
 - [![Windows](https://img.shields.io/badge/Windows10-0078D6?style=flat-square&logo=Windows&logoColor=white)]()
 - [![Chrome](https://img.shields.io/badge/Chrome-4285F4?style=flat-square&logo=Chrome&logoColor=white)]()
 - [![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ%20IDEA-000000?style=flat-square&logo=IntelliJ%20IDEA&logoColor=white)]()
@@ -19,7 +19,7 @@
 - [![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white)]()
 
 
-## 프로젝트 기능
+## 기능
 - Weather: 대한민국의 40개의 지역의 날씨 예보 제공
   <br>![weather](https://user-images.githubusercontent.com/86970934/139816149-a7fe1871-c755-4e43-8474-b477cc85cdfb.png)
     - 지역을 선택하면, 해당 지역의 날씨 정보를 확인 할 수 있는 기능
@@ -34,7 +34,7 @@
         - MyBatis를 통해 DB와 연동
 
 
-## 프로젝트 설치 & 실행
+## 설치 & 실행
 - 설치
 ```
 $ git clone git@github.com:loltaeja/weather.git
