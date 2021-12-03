@@ -1,10 +1,6 @@
 <!DOCTYPE html>
-<!--
-	Transit by TEMPLATED
-	templated.co @templatedco
-	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
--->
-<html lang="en">
+
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta charset="UTF-8">
 		<title>Generic - Transit by TEMPLATED</title>
@@ -19,24 +15,41 @@
 		<!-- Header -->
 		<div id="weather">
 			<layout-header></layout-header>
-
 			<!-- Main -->
 			<section id="main" class="wrapper">
 				<div class="container">
-
 					<header class="major">
 						<h2>Board</h2>
-						<p>Lorem ipsum dolor sit amet nullam id egestas urna aliquam</p>
 					</header>
 
-					<a href="#" class="image fit"><img src="/include/img/pic07.jpg" alt="" /></a>
-					<p>Vis accumsan feugiat adipiscing nisl amet adipiscing accumsan blandit accumsan sapien blandit ac amet faucibus aliquet placerat commodo. Interdum ante aliquet commodo accumsan vis phasellus adipiscing. Ornare a in lacinia. Vestibulum accumsan ac metus massa tempor. Accumsan in lacinia ornare massa amet. Ac interdum ac non praesent. Cubilia lacinia interdum massa faucibus blandit nullam. Accumsan phasellus nunc integer. Accumsan euismod nunc adipiscing lacinia erat ut sit. Arcu amet. Id massa aliquet arcu accumsan lorem amet accumsan.</p>
-					<p>Amet nibh adipiscing adipiscing. Commodo ante vis placerat interdum massa massa primis. Tempus condimentum tempus non ac varius cubilia adipiscing placerat lorem turpis at. Aliquet lorem porttitor interdum. Amet lacus. Aliquam lobortis faucibus blandit ac phasellus. In amet magna non interdum volutpat porttitor metus a ante ac neque. Nisi turpis. Commodo col. Interdum adipiscing mollis ut aliquam id ante adipiscing commodo integer arcu amet Ac interdum ac non praesent. Cubilia lacinia interdum massa faucibus blandit nullam. Accumsan phasellus nunc integer. Accumsan euismod nunc adipiscing lacinia erat ut sit. Arcu amet. Id massa aliquet arcu accumsan lorem amet accumsan commodo odio cubilia ac eu interdum placerat placerat arcu commodo lobortis adipiscing semper ornare pellentesque.</p>
-					<p>Amet nibh adipiscing adipiscing. Commodo ante vis placerat interdum massa massa primis. Tempus condimentum tempus non ac varius cubilia adipiscing placerat lorem turpis at. Aliquet lorem porttitor interdum. Amet lacus. Aliquam lobortis faucibus blandit ac phasellus. In amet magna non interdum volutpat porttitor metus a ante ac neque. Nisi turpis. Commodo col. Interdum adipiscing mollis ut aliquam id ante adipiscing commodo integer arcu amet blandit adipiscing arcu ante.</p>
+					<div v-if="list.length">
+						<table class="table table-hover">
+							<thead>
+								<tr class="text-center">
+									<th>제목</th>
+									<th>작성자</th>
+									<th>작성일</th>
+									<th>조회수</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr v-for="(list, i) in list" :key="i">
+									<td>{{list.title}}</td>
+									<td>{{list.userName}}</td>
+									<td>{{list.createdDate}}</td>
+									<td>{{list.hit}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div v-else>
+						게시글이 없습니다.
+					</div>
 
 				</div>
 			</section>
-
 			<layout-footer></layout-footer>
 		</div>
 
@@ -55,9 +68,28 @@
 				components: {
 					'layout-header': httpVueLoader('/include/layout/header.vue'),
 					'layout-footer': httpVueLoader('/include/layout/footer.vue')
+				},
+				data: {
+					list: []
+				},
+				methods: {
+					selectBoardList: function () {
+						axios.get('/board/list')
+						.then(function (response) {
+							vm.list = response.data;
+						})
+						.catch(function (error) {
+							this.handlerException(error.response);
+						});
+					}
+				},
+				mounted() {
+					this.$nextTick(function () {
+						// 전체 화면내용이 렌더링된 후에 아래의 코드가 실행됩니다.
+						vm.selectBoardList();
+					})
 				}
 			})
 		</script>
-
 	</body>
 </html>

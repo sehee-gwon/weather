@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weather.board.BoardMapper">
+    <resultMap id="BoardResult" type="com.weather.board.domain.Board">
+        <result property="boardId" column="board_id"/>
+        <result property="userId" column="user_id"/>
+
+        <result property="title" column="title"/>
+        <result property="contents" column="contents"/>
+        <result property="userName" column="user_name"/>
+        <result property="hit" column="hit"/>
+
+        <result property="insertDate" column="insert_date"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="deleteDate" column="delete_date"/>
+
+        <result property="deleteYn" column="delete_yn"/>
+    </resultMap>
+
+    <sql id="boardColumns">
+        board_id
+        , user_id
+        , title
+		, contents
+		, user_name
+        , hit
+		, insert_date
+        , update_date
+        , delete_date
+		, delete_yn
+    </sql>
+
+    <insert id="insertBoard" parameterType="Board">
+        INSERT INTO board (
+                            <include refid="boardColumns" />
+        ) VALUES (
+                            #{boardId}
+                            , #{userId}
+                            , #{title}
+                            , #{contents}
+                            , #{userName}
+                            , 0
+                            , NOW()
+                            , NULL
+                            , NULL
+                            , 'N'
+        )
+    </insert>
+
+    <update id="updateBoard" parameterType="Board">
+        UPDATE board
+        SET
+            update_time = NOW()
+            , title = #{title}
+            , contents = #{contents}
+            , user_name = #{userName}
+        WHERE
+            board_id = #{boardId}
+    </update>
+
+    <delete id="deleteBoard" parameterType="long">
+        UPDATE
+            board
+        SET
+            delete_yn = 'Y'
+            , delete_time = NOW()
+        WHERE
+            board_id = #{boardId}
+    </delete>
+
+    <select id="selectBoardDetail" parameterType="long" resultMap="BoardResult">
+        SELECT
+            <include refid="boardColumns" />
+        FROM
+            board
+        WHERE
+            delete_yn = 'N'
+        AND
+            board_id = #{boardId}
+    </select>
+
+    <select id="selectBoardList" resultMap="BoardResult">
+        SELECT
+            <include refid="boardColumns" />
+        FROM
+            board
+        WHERE
+            deleted_yn = 'N'
+        ORDER BY
+            board_id DESC
+            insert_time DESC
+	</select>
+
+</mapper>
