@@ -33,27 +33,27 @@
 		, delete_yn
     </sql>
 
-    <insert id="insertBoard" parameterType="Board">
+    <insert id="insertBoard" parameterType="com.weather.board.domain.Board">
         INSERT INTO board (
-                            <include refid="boardColumns" />
+            <include refid="boardColumns" />
         ) VALUES (
-                            #{boardId}
-                            , #{userId}
-                            , #{title}
-                            , #{contents}
-                            , #{userName}
-                            , 0
-                            , NOW()
-                            , NULL
-                            , NULL
-                            , 'N'
+            #{boardId}
+            , #{userId}
+            , #{title}
+            , #{contents}
+            , #{userName}
+            , 0
+            , NOW()
+            , NULL
+            , NULL
+            , 'N'
         )
     </insert>
 
-    <update id="updateBoard" parameterType="Board">
+    <update id="updateBoard" parameterType="com.weather.board.domain.Board">
         UPDATE board
         SET
-            update_time = NOW()
+            update_date = NOW()
             , title = #{title}
             , contents = #{contents}
             , user_name = #{userName}
@@ -66,7 +66,7 @@
             board
         SET
             delete_yn = 'Y'
-            , delete_time = NOW()
+            , delete_date = NOW()
         WHERE
             board_id = #{boardId}
     </delete>
@@ -88,10 +88,10 @@
         FROM
             board
         WHERE
-            deleted_yn = 'N'
+            delete_yn = 'N'
         ORDER BY
-            board_id DESC
-            insert_time DESC
+            board_id DESC,
+            insert_date DESC
 	</select>
 
 </mapper>

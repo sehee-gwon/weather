@@ -38,5 +38,5 @@ public interface BoardMapper {
     /**
      * 게시글 목록 조회
      */
-    List<Board> selectBoardList() throws Exception;
+    List<Board> selectBoardList(Board board) throws Exception;
 }

@@ -11,7 +11,7 @@ import java.util.List;
 public class BoardService {
     private final BoardMapper boardMapper;
 
-    public List<Board> selectBoardList() throws Exception {
-        return boardMapper.selectBoardList();
+    public List<Board> selectBoardList(Board board) throws Exception {
+        return boardMapper.selectBoardList(board);
     }
 }

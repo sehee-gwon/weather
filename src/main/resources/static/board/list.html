@@ -22,10 +22,11 @@
 						<h2>Board</h2>
 					</header>
 
-					<div v-if="list.length">
+					<div v-if="list.length > 0">
 						<table class="table table-hover">
 							<thead>
 								<tr class="text-center">
+									<th>글번호</th>
 									<th>제목</th>
 									<th>작성자</th>
 									<th>작성일</th>
@@ -34,11 +35,12 @@
 							</thead>
 
 							<tbody>
-								<tr v-for="(list, i) in list" :key="i">
-									<td>{{list.title}}</td>
-									<td>{{list.userName}}</td>
-									<td>{{list.createdDate}}</td>
-									<td>{{list.hit}}</td>
+								<tr v-for="(data, i) in list" :key="i">
+									<td>{{list.length-i}}</td>
+									<td>{{data.title}}</td>
+									<td>{{data.userName}}</td>
+									<td>{{data.insertDate}}</td>
+									<td>{{data.hit}}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -56,11 +58,13 @@
 		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> <!-- vue 개발버전, 도움되는 콘솔 경고를 포함. -->
 		<script src="https://unpkg.com/http-vue-loader"></script>
 		<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script> <!-- axios -->
 		<script src="/include/js/jquery.min.js"></script>
 		<script src="/include/js/skel.min.js"></script>
 		<script src="/include/js/skel-layers.min.js"></script>
 		<script src="/include/js/init.js"></script>
-        <script src="/include/js/common.js"></script>
+		<script src="/include/js/common.js"></script>
+		<script src="https://unpkg.com/vue-cookies@1.7.4/vue-cookies.js"></script> <!-- vue-cookie -->
 
 		<script type="text/javascript">
 			var vm = new Vue({
@@ -77,6 +81,7 @@
 						axios.get('/board/list')
 						.then(function (response) {
 							vm.list = response.data;
+							console.log(vm.list);
 						})
 						.catch(function (error) {
 							this.handlerException(error.response);
