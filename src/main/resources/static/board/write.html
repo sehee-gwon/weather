@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="UTF-8">
+        <title>Generic - Transit by TEMPLATED</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        <link rel="stylesheet" href="/include/css/skel.css" />
+        <link rel="stylesheet" href="/include/css/common.css" />
+        <link rel="stylesheet" href="/include/css/style-xlarge.css" />
+    </head>
+    <body>
+        <!-- Header -->
+        <div id="weather">
+            <layout-header></layout-header>
+            <!-- Main -->
+            <section id="main" class="wrapper">
+                <div class="container">
+                    <header class="major">
+                        <h2>글 작성</h2>
+                    </header>
+
+                    <form @submit.prevent="insertBoard" method="post">
+                        <table>
+                            <tr>
+                                <td>
+                                    <input class="12u 12u$" type="text" v-model="title" id="title" name="title" placeholder="title">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <textarea v-model="contents" id="contents" name="contents" placeholder="contents" rows="10"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                        <input type="submit" id="submit" value="등록" class="special">
+                    </form>
+                </div>
+            </section>
+
+            <layout-footer></layout-footer>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> <!-- vue 개발버전, 도움되는 콘솔 경고를 포함. -->
+        <script src="https://unpkg.com/http-vue-loader"></script>
+        <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script> <!-- axios -->
+        <script src="/include/js/jquery.min.js"></script>
+        <script src="/include/js/skel.min.js"></script>
+        <script src="/include/js/skel-layers.min.js"></script>
+        <script src="/include/js/init.js"></script>
+        <script src="/include/js/common.js"></script>
+        <script src="https://unpkg.com/vue-cookies@1.7.4/vue-cookies.js"></script> <!-- vue-cookie -->
+
+        <script type="text/javascript">
+            var vm = new Vue({
+                el: '#weather',
+                components: {
+                    'layout-header': httpVueLoader('/include/layout/header.vue'),
+                    'layout-footer': httpVueLoader('/include/layout/footer.vue')
+                },
+                data: {
+                    title: "",
+                    contents: ""
+                },
+                methods: {
+                    insertBoard: function () {
+                        var param = {
+                            title: vm.title,
+                            contents: vm.contents
+                        }
+                        axios.post('/board/write', param)
+                            .then(function (response) {
+                                alert("게시글 작성이 완료되었습니다.");
+                                location.href = "board/list.html";
+                            })
+                            .catch(function (error) {
+                                this.handlerException(error.response);
+                            });
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>

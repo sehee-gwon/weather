@@ -10,9 +10,8 @@ public interface BoardMapper {
     /**
      * 게시글 생성
      * @param board
-     * @return
      */
-    int insertBoard(Board board) throws Exception;
+    void insertBoard(Board board) throws Exception;
 
     /**
      * 게시글 수정
